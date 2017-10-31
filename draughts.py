@@ -44,6 +44,35 @@ def init_board(): #Intializes the board :
     draw_grid(grid) #Function to draw the grid
     return grid
 
+def stilPieces():
+    countB = 12
+    countW = 12
+    checkB = 0
+    checkW = 0
+    
+    for i in range(8):
+        for j in range(8):
+            if(grid[i][j] == "B " or grid[i][j] =="b "):
+                checkB = checkB +1 #checks how many places on the board
+            elif(grid[i][j] == "W " or grid[i][j] == "w "):
+                checkW = checkW +1
+                
+    defB = countB - checkB # defB checks the difference between 12 and the remaining spots
+    countB = countB - defB # updates the countB
+    print("Count B",countB)
+  
+    defW = countW -checkW
+    countW = countW - defW
+    print("Count W",countW)
+
+    if(countB > 1 or countW > 1):
+        return False
+    elif(countB == 0 or countW ==0 ):
+        return True
+    
+            
+                
+
 def draw_grid(grid):
     print("   0 1 2 3 4 5 6 7") #prints y's coordinates
     for x in range(width):
@@ -71,24 +100,22 @@ def setPlayers():
         
        if(Player1 != "B" or Player1 != "W"):
            Player1 = input("Select Player 1's Piece. B/W")
+        
 
 def firstMove(Player1):
     print("Player 1's Turn")
     draw_grid(grid)
-    pastMove1=[]
+    response = False
             
     currentMove = input("Select piece to move")
-
-    validPOS1(Player1, Player2, grid, currentMove, pastMove1,p2Pieces) #Another Function
+    validPOS1(Player1, Player2, currentMove,pastMove1,i) #Another Function
+    stilPieces()
 
     return grid
 
-def validPOS1(Player1, Player2, grid, currentMove, pastMove1,p2Pieces):
+def validPOS1(Player1, Player2, currentMove,pastMove1,i):
     toRows  = int (currentMove[0:1]) #Converts the sliced string to an int
     toCols  = int (currentMove[2:3])
-
-    kingPiece(Player1, toRows,toCols)
-   
 
     avaPOSX = toRows + 1 #chnages the coordinates to llok for the avaliable spaces near by
     avaPOSL = toCols - 1
@@ -98,77 +125,81 @@ def validPOS1(Player1, Player2, grid, currentMove, pastMove1,p2Pieces):
     POSL = toCols - 2
     POSR = toCols + 2
 
-    response = False
+
+    if(grid[toRows][toCols] == Player1.lower()+" "):
     
-    if((toRows < 0 or toRows >7) or (toCols < 0 or toCols > 7)): #checks if the input is in range
-        if((avaPOSX <0 or avaPOSX > 7) or (avaPOSL <0 or avaPOSL >7) or (avaPOSR <0 and avaPOSR >7)):#checka whether the avalaible pos are in range
-            print("Out of Range")
-            currentMove = input("Select piece to move") 
-
-            avaPOSX = toRows + 1
-            avaPOSL = toCols - 1
-            avaPOSR = toCols + 1
-            
-            
-        else:
-            while(((grid[avaPOSX][avaPOSL] != "_ ") or (grid[avaPOSX][avaPOSR] != "_ ") or (grid[POSX][POSR] != "_ ")
-                   or( grid[POSX][POSL] != "_ "))  and response == False):
-
-                if (grid[avaPOSX][avaPOSL] == "_ " ): #if the ava POS has a space
-                    response = True
-
-                if (grid[POSX][POSL] == "_ " ): # check if there was a free spot 2 spaces away and then checks if pplayer 2 is a spot away. 
-                    if(grid[avaPOSX][avaPOSL] == Player2+" "): 
-                        response = True
-            
-                elif (grid[avaPOSX][avaPOSR] == "_ "): 
-                    response = True
-           
-            
-                elif(grid[POSX][POSR] == "_ "):
-                    if(grid[avaPOSX][avaPOSR] == Player2+" "):
-                        response = True
-                    
-                
-                if((grid[avaPOSX][avaPOSL] != "_ ") and (grid[avaPOSX][avaPOSR] != "_ ") and (grid[POSX][POSR] != "_ ") and (grid[POSX][POSL] != "_ ")):
-                        currentMove = input("Selcet A Moveable Piece")
-                        toRows  = int (currentMove[0:1]) #Converts the sliced string to an int
-                        toCols  = int (currentMove[2:3])
-
-                        avaPOSX = toRows + 1 #chnages the coordinates to llok for the avaliable spaces near by
-                        avaPOSL = toCols - 1
-                        avaPOSR = toCols + 1
-       
-                        
-            
-    pastMove1 = input("Select New Postion")
-
-    newPOSX  = int (pastMove1[0:1]) #temp coordinates
-    newPOSY  = int (pastMove1[2:3])
-
-
-    re = False
-
-    #while (grid[newPOSX][newPOSY] != "_ " and re == False):
-
-    if (grid[newPOSX][newPOSY] == "_ "):  
-      
-        grid.append(pastMove1)
-        grid[newPOSX][newPOSY] = Player1+" "  #changes the avilabe space to B and the last space to _
-        grid[toRows][toCols] = "_ "
-        p2Pieces = checkForOpponents(grid, p2Pieces, newPOSX, newPOSY, toRows  ,toCols)
-        king1 = checkStatus(Player1, newPOSX, newPOSY)
+        kingMoves(toRows, toCols,i, pastMove1)
+    else:
         
-    
-    elif (grid[newPOSX][newPOSY] != "_ "):
-         pastMove1 = input("Unvalid Move! Select A New Postion")
-         newPOSX  = int (pastMove1[0:1]) #temp coordinates
-         newPOSY  = int (pastMove1[2:3])
-         
+        response = False
+        
+        if((toRows < 0 or toRows >7) or (toCols < 0 or toCols > 7)): #checks if the input is in range
+            if((avaPOSX <0 or avaPOSX > 7) or (avaPOSL <0 or avaPOSL >7) or (avaPOSR <0 and avaPOSR >7)):#checka whether the avalaible pos are in range
+                print("Out of Range")
+                currentMove = input("Select piece to move") 
 
-    return pastMove1, grid, toRows,toCols
+                avaPOSX = toRows + 1
+                avaPOSL = toCols - 1
+                avaPOSR = toCols + 1
+                
+                
+            else:
+                while(((grid[avaPOSX][avaPOSL] != "_ ") or (grid[avaPOSX][avaPOSR] != "_ ") or (grid[POSX][POSR] != "_ ")
+                       or( grid[POSX][POSL] != "_ "))  and response == False):
 
-def checkForOpponents(grid, p2Pieces, newPOSX, newPOSY, toRows ,toCols): # only works when postions are valid.
+                    if (grid[avaPOSX][avaPOSL] == "_ " ): #if the ava POS has a space
+                        response = True
+
+                    if (grid[POSX][POSL] == "_ " ): # check if there was a free spot 2 spaces away and then checks if pplayer 2 is a spot away. 
+                        if(grid[avaPOSX][avaPOSL] == Player2+" "): 
+                            response = True
+                
+                    elif (grid[avaPOSX][avaPOSR] == "_ "): 
+                        response = True
+               
+                
+                    elif(grid[POSX][POSR] == "_ "):
+                        if(grid[avaPOSX][avaPOSR] == Player2+" "):
+                            response = True
+                        
+                    
+                    if((grid[avaPOSX][avaPOSL] != "_ ") and (grid[avaPOSX][avaPOSR] != "_ ") and (grid[POSX][POSR] != "_ ") and (grid[POSX][POSL] != "_ ")):
+                            currentMove = input("Selcet A Moveable Piece")
+                            toRows  = int (currentMove[0:1]) #Converts the sliced string to an int
+                            toCols  = int (currentMove[2:3])
+
+                            avaPOSX = toRows + 1 #chnages the coordinates to llok for the avaliable spaces near by
+                            avaPOSL = toCols - 1
+                            avaPOSR = toCols + 1
+           
+                            
+        pastMove1.append(input("Select New Postion"))
+        print(pastMove1)
+
+        newPOSX  = int(pastMove1[i][0:1]) #temp coordinates
+        newPOSY  =  int(pastMove1[i][2:3])
+        print(newPOSX,newPOSY)  
+
+        if (grid[newPOSX][newPOSY] == "_ "):
+           
+            grid[newPOSX][newPOSY] = Player1+" "  #changes the avilabe space to B and the last space to _
+            grid[toRows][toCols] = "_ "
+            checkForOpponents(newPOSX, newPOSY, toRows ,toCols)
+            king1 = checkStatus(Player1, newPOSX, newPOSY)
+            
+        
+        elif (grid[newPOSX][newPOSY] != "_ "):
+             pastMove1.pop(i)
+             pastMove1.append(input("Unvalid Move! Select A New Postion"))
+             newPOSX  = int (pastMove1[i][0:1]) #temp coordinates
+             newPOSY  = int (pastMove1[i][2:3])
+
+       
+             
+
+    return pastMove1, grid, toRows,toCols, i 
+
+def checkForOpponents(newPOSX, newPOSY, toRows ,toCols): # only works when postions are valid.
 
     if ((newPOSY-toCols) == 2): 
         #Sqaure moves right 
@@ -177,7 +208,7 @@ def checkForOpponents(grid, p2Pieces, newPOSX, newPOSY, toRows ,toCols): # only 
         print(Player2) 
         if(grid[a][b] == Player2+" "):
             grid[a][b] = "_ "
-            p2Pieces = p2Pieces - 1
+            
         elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
             print("No Piece to Take")
             
@@ -188,40 +219,38 @@ def checkForOpponents(grid, p2Pieces, newPOSX, newPOSY, toRows ,toCols): # only 
         
         if(grid[a][b] == Player2+" "):
             grid[a][b] = "_ "
-            p2Pieces = p2Pieces - 1
-            print(p2Pieces)
+            
                     
         elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
             print("No Piece to Take")
-
-    doubleJump1(newPOSX, newPOSY,Player2,p2Pieces)
         
 
-    return p2Pieces, grid
+    return
 
-def doubleJump1(newPOSX, newPOSY,Player2,p2Pieces):
-
-    print("I have entereed the dj")
-    newPo1X = newPOSX +1
-    newPo1Y = newPOSY +1
-
-    newPo2X = newPOSX + 2
-    newPo2Y = newPOSY + 2
-
-    if ((newPo2X > 7) and (newPo2Y > 7)):
-        print("Out of Range")
-        return grid
-    else:
-        if((grid[newPo2X][newPo2Y] == "_ ") and (grid[newPo1X][newPo1Y]== Player2+" ")):
-            answer = input("Would you Like to make an addtional move? Y/N")
-            if (answer == "Y"):
-                grid[newPo2X][newPo2Y] = Player1+""
-                grid[newPo1X][newPo1Y] = "_ "
-                p2Pieces-=1
-
-                return grid
-            else:
-                return grid
+##def doubleJump1(newPOSX, newPOSY,Player2):
+##
+##    print("I have entereed the dj")
+##    newPo1X = newPOSX +1
+##    newPo1Y = newPOSY +1
+##
+##    newPo2X = newPOSX + 2
+##    newPo2Y = newPOSY + 2
+##
+##    if((newPo1X < 0 or newPo1X >7) or (newPo1Y < 0 or newPo1Y > 7)): #checks if the input is in range
+##        if((newPo2X < 0 or newPo2X >7) or (newPo2Y < 0 or newPo2Y > 7)):
+##            print("Out of Range")
+##            return grid
+##        else:
+##            if((grid[newPo2X][newPo2Y] == "_ ") and (grid[newPo1X][newPo1Y]== Player2+" ")):
+##                answer = input("Would you Like to make an addtional move? Y/N")
+##                if (answer == "Y"):
+##                    grid[newPo2X][newPo2Y] = Player1+""
+##                    grid[newPo1X][newPo1Y] = "_ "
+##
+##                    return grid
+##            else:
+##                return grid
+##    else: return False
 
 def checkStatus(Player1,newPOSX, newPOSY):
 
@@ -232,23 +261,17 @@ def checkStatus(Player1,newPOSX, newPOSY):
     else:
         print("No king")
         return False
-
-def kingPiece(king1 ,toRows,toCols):
-     if(grid[toRows][toCols] == king1):
-        kingMoves()
-
-     else:
-        return False
     
 
-def kingMoves():
+def kingMoves(toRows, toCols,i, pastMove1):
     print("I am king")
-    
-    #Ways in a king moves:
-        #Up and Down
-        #Other than that the same
-        #(--)(-+)(+-)(++)
 
+    avaPOSX = toRows + 1
+    avaPOSY = toRows - 1
+    avaPOSL = toCols - 1
+    avaPOSR = toCols + 1
+
+    
     #Valid pos
     POSX = toRows + 2
     POSY = toRows - 2
@@ -258,12 +281,13 @@ def kingMoves():
     response = False
     
     if((toRows < 0 or toRows >7) or (toCols < 0 or toCols > 7)):
-        if((avaPOSX <0 or avaPOSX > 7) or (avaPOSL <0 or avaPOSL >7) or (avaPOSR <0 and avaPOSR >7)):   
+        if((avaPOSX <0 or avaPOSX > 7) or (avaPOSY <0 or avaPOSY > 7) or
+           (avaPOSL <0 or avaPOSL >7) or(avaPOSR <0 and avaPOSR >7)):   
             print("Out of Range")
             currentMove = input("Select piece to move")
 
             avaPOSX = toRows + 1
-            avaPOSY = toRows -1
+            avaPOSY = toRows - 1
             avaPOSL = toCols - 1
             avaPOSR = toCols + 1
             
@@ -305,16 +329,17 @@ def kingMoves():
                         toCols  = int (currentMove[2:3])
 
                         avaPOSX = toRows + 1
-                        avaPOSY = toRows - #chnages the coordinates to llok for the avaliable spaces near by
+                        avaPOSY = toRows - 1 #chnages the coordinates to llok for the avaliable spaces near by
                         avaPOSL = toCols - 1
                         avaPOSR = toCols + 1
        
                         
-            
-    pastMove1 = input("Select New Postion")
+    pastMove1.append(input("Select New Postion"))
+    print(pastMove1)
 
-    newPOSX  = int (pastMove1[0:1]) #temp coordinates
-    newPOSY  = int (pastMove1[2:3])
+    newPOSX  = int (pastMove1[i][0:1]) #temp coordinates
+    newPOSY  =  int (pastMove1[i][2:3])
+    print(newPOSX,newPOSY)  
 
 
     re = False
@@ -325,47 +350,78 @@ def kingMoves():
         
         if((newPOSX == toRows +2 and newPOSY == toCols +2) or(newPOSX == toRows +2 and newPOSY == toCols -2)or
        (newPOSX == toRows -2 and newPOSY == toCols +2)or(newPOSX == toRows -2 and newPOSY == toCols -2)):
-
-            if (grid[newPOSX][newPOSY] == "_ "):  
-              
-                grid.append(pastMove1)
-                grid[newPOSX][newPOSY] = Player1+" "  #changes the avilabe space to B and the last space to _
-                grid[toRows][toCols] = "_ "
-                kingOpponents(grid, p2Pieces, newPOSX, newPOSY, toRows  ,toCols)
-                                
+            if ((newPOSY - toCols) == 2):  #Sqaure moves right 
+                if((newPOSX - toRows) == 2): #sqaure moved down
+                    grid[newPOSY][newPOSR] == Player1.lower()+" "
+                    grid[toRows][toCols] = "_ "
+                elif((newPOSX-toRows)== -2): #sqaure moved up
+                    grid[newPOSX][newPOSR] == Player2+" "):
+                    grid[toRows][toCols] = "_ "
+    
             
-            elif (grid[newPOSX][newPOSY] != "_ "):
-                 pastMove1 = input("Unvalid Move! Select A New Postion")
-                 newPOSX  = int (pastMove1[0:1]) #temp coordinates
-                 newPOSY  = int (pastMove1[2:3])
+            if (newPOSY-toCols == -2): #sqaure moved left
+                 if((newPOSX - toRows) == 2): #sqaure moved down
+                     grid[newPOSX][newPOSL] == Player1.lower()+" ":
+                     grid[toRows][toCols] = "_ "
+        
+                 elif((newPOSX-toRows)== -2): #sqaure moved up
+                    
+                    if(grid[newPOSX][newPOSL] == Player1.lower()+" "
+                        grid[toRows][toCols] = "_ "
+
+           
+            
+    
+    elif (grid[newPOSX][newPOSY] != "_ "):
+         pastMove1 = input("Unvalid Move! Select A New Postion")
+         newPOSX  = int (pastMove1[0:1]) #temp coordinates
+         newPOSY  = int (pastMove1[2:3])
             
         
     
-    return secondMoves()
+    return secondMoves(Player2)
 
-def kingOpponents():
-    if ((newPOSY-toCols) == 2): 
-        #Sqaure moves right 
-        a = newPOSX - 1 #a and b coorindinates for opponent
-        b = newPOSY - 1
-        print(Player2) 
-        if(grid[a][b] == Player2+" "):
-            grid[a][b] = "_ "
-            p2Pieces = p2Pieces - 1
-        elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
-            print("No Piece to Take")
+def kingOpponents(newPOSX, newPOSY, toRows ,toCols):
+    if ((newPOSY - toCols) == 2):  #Sqaure moves right 
+        if((newPOSX - toRows) == 2): #sqaure moved down
+           
+            a = newPOSX - 1 #a and b coorindinates for opponent
+            b = newPOSY - 1
+            print(Player2) 
+            if(grid[a][b] == Player2+" "):
+                grid[a][b] = "_ "
+            elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
+                print("No Piece to Take")
+        elif((newPOSX-toRows)== -2): #sqaure moved up
+            a = newPOSX + 1 #a and b coorindinates for opponent
+            b = newPOSY - 1
+            print(Player2) 
+            if(grid[a][b] == Player2+" "):
+                grid[a][b] = "_ "
+            elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
+                print("No Piece to Take")
+        
+        
             
     if (newPOSY-toCols == -2): #sqaure moved left
+         if((newPOSX - toRows) == 2): #sqaure moved down
+           
+            a = newPOSX - 1 #a and b coorindinates for opponent
+            b = newPOSY + 1
+            if(grid[a][b] == Player2+" "):
+                grid[a][b] = "_ "
+            elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
+                print("No Piece to Take")
+         elif((newPOSX-toRows)== -2): #sqaure moved up
+            a = newPOSX + 1 #a and b coorindinates for opponent
+            b = newPOSY + 1
+            
+            if(grid[a][b] == Player2+" "):
+                grid[a][b] = "_ "
+            elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
+                print("No Piece to Take")
       
-        a = newPOSX -1
-        b = newPOSY + 1
-        
-        if(grid[a][b] == Player2+" "):
-            grid[a][b] = "_ "
-            p2Pieces = p2Pieces - 1
-                    
-        elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
-            print("No Piece to Take")
+    return newPOSX, newPOSY, toRows ,toCols
      
     
     
@@ -378,12 +434,12 @@ def secondMoves(Player2):
     draw_grid(grid)
             
     currentMove = input("Select piece to move")
-    validPOS2(Player2, grid, currentMove, pastMove2,p1Pieces)
+    validPOS2(Player2, currentMove, pastMove2)
 
 
     return grid
 
-def validPOS2(Player2, grid, currentMove, pastMove2, p1Pieces):
+def validPOS2(Player2, currentMove, pastMove2):
     toRows  = int (currentMove[0:1]) #Converts the sliced string to an int
     toCols  = int (currentMove[2:3])
 
@@ -424,11 +480,14 @@ def validPOS2(Player2, grid, currentMove, pastMove2, p1Pieces):
                         avaPOSL = toCols - 1
                         avaPOSR = toCols + 1
                     
-            
-    pastMove2 = input("Select New Postion")
+    pastMove2 =[]
+    i = 0
+    pastMove2.append(input("Select New Postion"))
 
-    newPOSX  = int (pastMove2[0:1]) #temp coordinates
-    newPOSY  = int (pastMove2[2:3])
+    newPOSX  = int (pastMove2[i][0:1]) #temp coordinates
+    newPOSY  = int (pastMove2[i][2:3])
+
+    print(pastMove2)
     #re = False
 
     #while ((grid[newPOSX][newPOSY] != "_ ") and re == False):        
@@ -437,7 +496,7 @@ def validPOS2(Player2, grid, currentMove, pastMove2, p1Pieces):
         grid.append(pastMove2)
         grid[newPOSX][newPOSY] = Player2+" "  #changes the avilabe space to B and the last space to _
         grid[toRows][toCols] = "_ "
-        p1Pieces = checkForOppo(grid, p1Pieces, newPOSX, newPOSY, toRows,toCols)
+        checkForOppo(newPOSX, newPOSY, toRows,toCols)
         
     
     elif (grid[newPOSX][newPOSY] != "_ "):
@@ -447,7 +506,7 @@ def validPOS2(Player2, grid, currentMove, pastMove2, p1Pieces):
 
     return pastMove2, grid, toRows,toCols
 
-def checkForOppo(grid, p1Pieces, newPOSX, newPOSY, toRows ,toCols): # only works when postions are valid.
+def checkForOppo(newPOSX, newPOSY, toRows ,toCols): # only works when postions are valid.
     if ((newPOSY-toCols) == 2):
         #Sqaure moved right 
         a = newPOSX + 1 #a and b coorindinates for opponent
@@ -455,8 +514,6 @@ def checkForOppo(grid, p1Pieces, newPOSX, newPOSY, toRows ,toCols): # only works
         
         if(grid[a][b] == Player1+" "):
             grid[a][b] = "_ "
-            p1Pieces = p1Pieces - 1
-            print(p1Pieces)
         elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
             print("No Piece to Take")
             
@@ -467,31 +524,29 @@ def checkForOppo(grid, p1Pieces, newPOSX, newPOSY, toRows ,toCols): # only works
 
         if(grid[a][b] == Player1+" "):
             grid[a][b] = "_ "
-            p1Pieces = p1Pieces - 1
-            print(p1Pieces)
         
 
-    return p1Pieces, grid
+    return 
 
-def checkStatus(Player1,newPOSX, newPOSY):
+def check2Status(Player1,newPOSX, newPOSY):
 
-    if(newPOSX == 7):
-        grid[newPOSX][newPOSY] = Player1.lower()+" "
-        king1 = Player1.lower()+" "
+    if(newPOSX == 0):
+        grid[newPOSX][newPOSY] = Player2.lower()+" "
+        king2 = Player2.lower()+" "
         return king1
     else:
         print("No king")
         return False
 
-def kingPiece(king1 ,toRows,toCols):
-     if(grid[toRows][toCols] == king1):
+def king2Piece(king1 ,toRows,toCols):
+     if(grid[toRows][toCols] == king2):
         kingMoves()
 
      else:
         return False
     
 
-def kingMoves():
+def king2Moves():
     print("I am king")
     
     #Ways in a king moves:
@@ -555,17 +610,17 @@ def kingMoves():
                         toCols  = int (currentMove[2:3])
 
                         avaPOSX = toRows + 1
-                        avaPOSY = toRows - #chnages the coordinates to llok for the avaliable spaces near by
+                        avaPOSY = toRows - 1 #chnages the coordinates to llok for the avaliable spaces near by
                         avaPOSL = toCols - 1
                         avaPOSR = toCols + 1
        
                         
             
-    pastMove1 = input("Select New Postion")
+    pastMove1.append(input("Select New Postion"))
+    print(pastMove1)
 
-    newPOSX  = int (pastMove1[0:1]) #temp coordinates
-    newPOSY  = int (pastMove1[2:3])
-
+    newPOSX  = int (pastMove1[i][0:1]) #temp coordinates
+    newPOSY  =  int (pastMove1[i][2:3])
 
     re = False
 
@@ -581,7 +636,7 @@ def kingMoves():
                 grid.append(pastMove1)
                 grid[newPOSX][newPOSY] = Player1+" "  #changes the avilabe space to B and the last space to _
                 grid[toRows][toCols] = "_ "
-                kingOpponents(grid, p2Pieces, newPOSX, newPOSY, toRows  ,toCols)
+                kingOpponents(newPOSX, newPOSY, toRows  ,toCols)
                                 
             
             elif (grid[newPOSX][newPOSY] != "_ "):
@@ -593,13 +648,13 @@ def kingMoves():
     
     return secondMoves()
 
-def kingOpponents():
+def kingOppo():
     if ((newPOSY-toCols) == 2): 
         #Sqaure moves right 
         a = newPOSX - 1 #a and b coorindinates for opponent
         b = newPOSY - 1
         print(Player2) 
-        if(grid[a][b] == Player2+" "):
+        if(grid[a][b] == Player2+ " "):
             grid[a][b] = "_ "
             p2Pieces = p2Pieces - 1
         elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
@@ -612,26 +667,31 @@ def kingOpponents():
         
         if(grid[a][b] == Player2+" "):
             grid[a][b] = "_ "
-            p2Pieces = p2Pieces - 1
                     
         elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
             print("No Piece to Take")
 
 #Issues found while playing:
     #Move other persons piece!
-    #Pieces Value does not depreciate
+    #When error message occurs, no change to piece
+    #Empty variables
+    #King changed back
+    #Appending into liat when value has not been checked
+    
           
 ##Global Variables
 width = 8
 height = 8
-p1Pieces = 12
-p2Pieces = 12
-
+i = 0
+j = 0
 #Main Program
 grid = init_board()
 (Player1, Player2) = setPlayers()
-
-while((p1Pieces != 0) or (p2Pieces !=0)):
+pastMove1=[]
+pastMove2=[]
+while(stilPieces() == False):
     firstMove(Player1)
+    i+=1
     secondMoves(Player2)
+    j+=1
   

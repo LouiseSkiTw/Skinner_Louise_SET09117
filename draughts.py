@@ -152,7 +152,7 @@ def validPOS1(Player1, Player2, currentMove,pastMove1,i):
                         response = True
 
                     if (grid[POSX][POSL] == "_ " ): # check if there was a free spot 2 spaces away and then checks if pplayer 2 is a spot away. 
-                        if(grid[avaPOSX][avaPOSL] == Player2+" "): 
+                        if(grid[avaPOSX][avaPOSL] == Player2+" " or grid[avaPOSX][avaPOSR] == Player2.lower()+" "): 
                             response = True
                 
                     elif (grid[avaPOSX][avaPOSR] == "_ "): 
@@ -160,7 +160,7 @@ def validPOS1(Player1, Player2, currentMove,pastMove1,i):
                
                 
                     elif(grid[POSX][POSR] == "_ "):
-                        if(grid[avaPOSX][avaPOSR] == Player2+" "):
+                        if(grid[avaPOSX][avaPOSR] == Player2+" " or grid[avaPOSX][avaPOSR] == Player2,lower()+" " ):
                             response = True
                         
                     
@@ -206,7 +206,7 @@ def checkForOpponents(newPOSX, newPOSY, toRows ,toCols): # only works when posti
         #Sqaure moves right 
         a = newPOSX - 1 #a and b coorindinates for opponent
         b = newPOSY - 1 
-        if(grid[a][b] == Player2+" "):
+        if(grid[a][b] == Player2+" " or (grid[a][b] == Player2.lower()+" ")):
             grid[a][b] = "_ "
             
         elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
@@ -217,7 +217,7 @@ def checkForOpponents(newPOSX, newPOSY, toRows ,toCols): # only works when posti
         a = newPOSX -1
         b = newPOSY + 1
         
-        if(grid[a][b] == Player2+" "):
+        if(grid[a][b] == Player2+" " or (grid[a][b] == Player2.lower()+" ")):
             grid[a][b] = "_ "
             
                     
@@ -226,31 +226,6 @@ def checkForOpponents(newPOSX, newPOSY, toRows ,toCols): # only works when posti
         
 
     return
-
-##def doubleJump1(newPOSX, newPOSY,Player2):
-##
-##    print("I have entereed the dj")
-##    newPo1X = newPOSX +1
-##    newPo1Y = newPOSY +1
-##
-##    newPo2X = newPOSX + 2
-##    newPo2Y = newPOSY + 2
-##
-##    if((newPo1X < 0 or newPo1X >7) or (newPo1Y < 0 or newPo1Y > 7)): #checks if the input is in range
-##        if((newPo2X < 0 or newPo2X >7) or (newPo2Y < 0 or newPo2Y > 7)):
-##            print("Out of Range")
-##            return grid
-##        else:
-##            if((grid[newPo2X][newPo2Y] == "_ ") and (grid[newPo1X][newPo1Y]== Player2+" ")):
-##                answer = input("Would you Like to make an addtional move? Y/N")
-##                if (answer == "Y"):
-##                    grid[newPo2X][newPo2Y] = Player1+""
-##                    grid[newPo1X][newPo1Y] = "_ "
-##
-##                    return grid
-##            else:
-##                return grid
-##    else: return False
 
 def checkStatus(Player1,newPOSX, newPOSY):
 
@@ -303,7 +278,7 @@ def kingMoves(toRows, toCols,i, pastMove1):
                     response = True
 
                 if (grid[POSX][POSL] == "_ " ):
-                    if(grid[avaPOSX][avaPOSL] == Player2+" "):
+                    if(grid[avaPOSX][avaPOSL] == Player2+" " or grid[avaPOSX][avaPOSL] == Player2.lower()+" "):
                         response = True
                 if(grid[POSY][POSL] == "_ "):
                     response = True
@@ -315,11 +290,11 @@ def kingMoves(toRows, toCols,i, pastMove1):
                      response = True
             
                 elif(grid[POSX][POSR] == "_ "):
-                    if(grid[avaPOSX][avaPOSR] == Player2+" "):
+                    if(grid[avaPOSX][avaPOSR] == Player2+" " or grid[avaPOSX][avaPOSR] == Player2.lower()+" "):
                         response = True
                     
                 elif(grid[POSY][POSR] == "_ "):
-                    if(grid[avaPOSY][avaPOSR] == Player2+" "):
+                    if(grid[avaPOSY][avaPOSR] == Player2+" " or grid[avaPOSY][avaPOSR] == Player2.lower()+" "):
                         response = True
                         
                 if((grid[avaPOSX][avaPOSL] != "_ ") and (grid[avaPOSX][avaPOSR] != "_ ") and (grid[POSX][POSR] != "_ ") and (grid[POSX][POSL] != "_ ")
@@ -362,7 +337,7 @@ def kingOpponents(newPOSX, newPOSY, toRows ,toCols):
             a = newPOSX - 1 #a and b coorindinates for opponent
             b = newPOSY - 1
             print(Player2) 
-            if(grid[a][b] == Player2+" "):
+            if(grid[a][b] == Player2+" " or grid[a][b] == Player2.lower()+" "):
                 grid[a][b] = "_ "
             elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
                 print("No Piece to Take")
@@ -371,7 +346,7 @@ def kingOpponents(newPOSX, newPOSY, toRows ,toCols):
             a = newPOSX + 1 #a and b coorindinates for opponent
             b = newPOSY - 1
             print(Player2) 
-            if(grid[a][b] == Player2+" "):
+            if(grid[a][b] == Player2+" " or grid[a][b] == Player2.lower()+" "):
                 grid[a][b] = "_ "
             elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
                 print("No Piece to Take")
@@ -383,7 +358,7 @@ def kingOpponents(newPOSX, newPOSY, toRows ,toCols):
            
             a = newPOSX - 1 #a and b coorindinates for opponent
             b = newPOSY + 1
-            if(grid[a][b] == Player2+" "):
+            if(grid[a][b] == Player2+" " or grid[a][b] == Player2.lower()+" "):
                 grid[a][b] = "_ "
                 
             elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
@@ -392,7 +367,7 @@ def kingOpponents(newPOSX, newPOSY, toRows ,toCols):
             a = newPOSX + 1 #a and b coorindinates for opponent
             b = newPOSY + 1
             
-            if(grid[a][b] == Player2+" "):
+            if(grid[a][b] == Player2+" " or grid[a][b] == Player2.lower()+" "):
                 grid[a][b] = "_ "
             elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
                 print("No Piece to Take")
@@ -439,14 +414,14 @@ def validPOS2(Player2, currentMove, pastMove2):
                         response = True
                         
                     if (grid[POSX][POSL] == "_ " ):
-                        if(grid[avaPOSX][avaPOSL] == Player1+" "):
+                        if(grid[avaPOSX][avaPOSL] == Player1+" " or grid[avaPOSX][avaPOSL] == Player1.lowert()+" "):
                             response = True
                 
                     if (grid[avaPOSX][avaPOSR] == "_ "):
                         response = True 
 
                     if(grid[POSX][POSR] == "_ "):
-                        if(grid[avaPOSX][avaPOSR] == Player1+" "):
+                        if(grid[avaPOSX][avaPOSR] == Player1+" " or grid[avaPOSX][avaPOSR] == Player1.lower()+" "):
                             response = True
                         
                     
@@ -485,7 +460,7 @@ def checkForOppo(newPOSX, newPOSY, toRows ,toCols): # only works when postions a
         a = newPOSX + 1 #a and b coorindinates for opponent
         b = newPOSY - 1
         
-        if(grid[a][b] == Player1+" "):
+        if(grid[a][b] == Player1+" " or grid[a][b] == Player1.lower()+" "):
             grid[a][b] = "_ "
         elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
             print("No Piece to Take")
@@ -493,10 +468,10 @@ def checkForOppo(newPOSX, newPOSY, toRows ,toCols): # only works when postions a
     if (newPOSY-toCols == -2): #sqaure moved left
         a = newPOSX + 1
         b = newPOSY + 1
-        print(a, b)
-
-        if(grid[a][b] == Player1+" "):
+        if(grid[a][b] == Player1+" " or grid[a][b] == Player1.lower()+" "):
             grid[a][b] = "_ "
+        elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
+            print("No Piece to Take")
         
 
     return 
@@ -550,10 +525,12 @@ def king2Moves(toRows, toCols, j, pastMove2):
                     response = True
 
                 if (grid[POSX][POSL] == "_ " ):
-                    if(grid[avaPOSX][avaPOSL] == Player2+" "):
+                    if(grid[avaPOSX][avaPOSL] == Player1+" " or grid[avaPOSX][avaPOSL] == Player1.lower()+" "):
                         response = True
+                        
                 if(grid[POSY][POSL] == "_ "):
-                    response = True
+                    if(grid[avaPOSY][avaPOSL] == Player1+" " or grid[avaPOSY][avaPOSL] == Player1.lower()+" "):
+                        response = True
             
                 elif (grid[avaPOSX][avaPOSR] == "_ "):
                     response = True
@@ -562,11 +539,11 @@ def king2Moves(toRows, toCols, j, pastMove2):
                      response = True
             
                 elif(grid[POSX][POSR] == "_ "):
-                    if(grid[avaPOSX][avaPOSR] == Player2+" "):
+                    if(grid[avaPOSX][avaPOSR] == Player1+" " or grid[avaPOSX][avaPOSR] == Player1.lower()+" "):
                         response = True
                     
                 elif(grid[POSY][POSR] == "_ "):
-                    if(grid[avaPOSY][avaPOSR] == Player2+" "):
+                    if(grid[avaPOSY][avaPOSR] == Player1+" " or grid[avaPOSY][avaPOSR] == Player1.lower()+" "):
                         response = True
                         
                 if((grid[avaPOSX][avaPOSL] != "_ ") and (grid[avaPOSX][avaPOSR] != "_ ") and (grid[POSX][POSR] != "_ ") and (grid[POSX][POSL] != "_ ")
@@ -605,27 +582,45 @@ def king2Moves(toRows, toCols, j, pastMove2):
     return grid
 
 def kingOppo(newPOSX, newPOSY, toRows ,toCols):
-    if ((newPOSY-toCols) == 2): 
-        #Sqaure moves right 
-        a = newPOSX - 1 #a and b coorindinates for opponent
-        b = newPOSY - 1
-        print(Player2) 
-        if(grid[a][b] == Player2+ " "):
-            grid[a][b] = "_ "
-            p2Pieces = p2Pieces - 1
-        elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
-            print("No Piece to Take")
+    if ((newPOSY - toCols) == 2):  #Sqaure moves right 
+        if((newPOSX - toRows) == 2): #sqaure moved down
+           
+            a = newPOSX - 1 #a and b coorindinates for opponent
+            b = newPOSY - 1 
+            if(grid[a][b] == Player1+" " or grid[a][b] == Player1.lower()+" "):
+                grid[a][b] = "_ "
+            elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
+                print("No Piece to Take")
+                
+        elif((newPOSX-toRows)== -2): #sqaure moved up
+            a = newPOSX + 1 #a and b coorindinates for opponent
+            b = newPOSY - 1
+           
+            if(grid[a][b] == Player1+" " or grid[a][b] == Player1.lower()+" "):
+                grid[a][b] = "_ "
+            elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
+                print("No Piece to Take")
+        
+        
             
     if (newPOSY-toCols == -2): #sqaure moved left
-      
-        a = newPOSX -1
-        b = newPOSY + 1
-        
-        if(grid[a][b] == Player2+" "):
-            grid[a][b] = "_ "
-                    
-        elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
-            print("No Piece to Take")
+         if((newPOSX - toRows) == 2): #sqaure moved down
+           
+            a = newPOSX - 1 #a and b coorindinates for opponent
+            b = newPOSY + 1
+            if(grid[a][b] == Player1+" " or grid[a][b] == Player1.lower()+" "):
+                grid[a][b] = "_ "
+            elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
+                print("No Piece to Take")
+                
+         elif((newPOSX-toRows)== -2): #sqaure moved up
+            a = newPOSX + 1 #a and b coorindinates for opponent
+            b = newPOSY + 1
+            
+            if(grid[a][b] == Player1+" " or grid[a][b] == Player1.lower()+" "):
+                grid[a][b] = "_ "
+            elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
+                print("No Piece to Take")
 
 #Issues found while playing:
     #Move other persons piece!
@@ -645,7 +640,7 @@ pastMove2=[]
 #Main Program
 grid = init_board()
 (Player1, Player2) = setPlayers()
-while(stilPieces() == False):
+while(stilPieces(bool) == False):
     firstMove(Player1)
     i+=1
     secondMoves(Player2)

@@ -1,77 +1,4 @@
-##class AlphaBeta:
-##    # print utility value of root node (assuming it is max)
-##    # print names of all nodes visited during search
-##    def __init__(self, game_tree):
-##        self.game_tree = game_tree  # GameTree
-##        self.root = game_tree.root  # GameNode
-##        return
-##
-##    def alpha_beta_search(self, node):
-##        infinity = float('inf')
-##        best_val = -infinity
-##        beta = infinity
-##
-##        successors = self.getSuccessors(node)
-##        best_state = None
-##        for state in successors:
-##            value = self.min_value(state, best_val, beta)
-##            if value > best_val:
-##                best_val = value
-##                best_state = state
-##        print ("AlphaBeta:  Utility Value of Root Node: = ") + str(best_val)
-##        print ("AlphaBeta:  Best State is: ") + best_state.Name
-##        return best_state
-##
-##    def max_value(self, node, alpha, beta):
-##        print ("AlphaBeta-->MAX: Visited Node :: ") + node.Name
-##        if self.isTerminal(node):
-##            return self.getUtility(node)
-##        infinity = float('inf')
-##        value = -infinity
-##
-##        successors = self.getSuccessors(node)
-##        for state in successors:
-##            value = max(value, self.min_value(state, alpha, beta))
-##            if value >= beta:
-##                return value
-##            alpha = max(alpha, value)
-##        return value
-##
-##    def min_value(self, node, alpha, beta):
-##        print ("AlphaBeta-->MIN: Visited Node :: ") + node.Name
-##        if self.isTerminal(node):
-##            return self.getUtility(node)
-##        infinity = float('inf')
-##        value = infinity
-##
-##        successors = self.getSuccessors(node)
-##        for state in successors:
-##            value = min(value, self.max_value(state, alpha, beta))
-##            if value <= alpha:
-##                return value
-##            beta = min(beta, value)
-##
-##        return value
-##    #                     #
-##    #   UTILITY METHODS   #
-##    #                     #
-##
-##    # successor states in a game tree are the child nodes...
-##    def getSuccessors(self, node):
-##        assert node is not None
-##        return node.children
-##
-##    # return true if the node has NO children (successor states)
-##    # return false if the node has children (successor states)
-##    def isTerminal(self, node):
-##        assert node is not None
-##        return len(node.children) == 0
-##
-##    def getUtility(self, node):
-##        assert node is not None
-##        return node.value
-
-
+import random
 def instruction():
     print("Welcome to a game of draughts. Player 1. Select your Opponent. You have a choice of two. Agaisnt your frind or Play agasint the computer")
     print("Rules:")
@@ -81,6 +8,8 @@ def instruction():
     print("     4. Double jumping is NOT allowed")
     print("     5. Pieces are only allowed to move 1 spot at a time only if they are stealing an opponents piece")
     print("     6. To undo a move, write 'undo' on your opponents\ns")
+    print("     7. Player 1 = 'B' & Player 2 = 'W' ")
+    print("     8. Kings will be changed to 'b' & 'w'\n")
 
 
 def init_board(): #Intializes the board :
@@ -167,28 +96,9 @@ def draw_grid(grid):
         for y in range(height):
             print(grid[x][y], end="")
     return grid
-
-
-def setPlayers(): 
-   Player1 = input("Select Player 1's Piece. B/W")
-   response = False
-   
-   while((Player1 != "B" or Player1 != "W") and response == False):
-       if(Player1 == "B"):
-           response = True
-           Player2 = "W"
-           return Player1, Player2
-           
-       elif (Player1 == "W"):
-            Player2 = "B"
-            response = True
-            return Player1, Player2
-        
-       if(Player1 != "B" or Player1 != "W"):
-           Player1 = input("Select Player 1's Piece. B/W")
         
 
-def firstMove(Player1,i):
+def firstMove(i):
     print("Player 1's Turn")
     draw_grid(grid)
             
@@ -197,12 +107,12 @@ def firstMove(Player1,i):
         currentMove1.pop()
         undo_feature_2(j,pastMove2,currentMove2)
     else:
-        validPOS1(Player1, Player2, currentMove1, pastMove1,i) #Another Function
+        validPOS1(currentMove1, pastMove1,i) #Another Function
         stilPieces(bool)
 
     return grid
 
-def validPOS1(Player1, Player2, currentMove1,pastMove1,i):
+def validPOS1(currentMove1,pastMove1,i):
     toRows  = int (currentMove1[i][0:1]) #Converts the sliced string to an int
     toCols  = int (currentMove1[i][2:3])
 
@@ -215,7 +125,7 @@ def validPOS1(Player1, Player2, currentMove1,pastMove1,i):
     POSR = toCols + 2
 
 
-    if(grid[toRows][toCols] == Player1.lower()+" "):
+    if(grid[toRows][toCols] == "b "):
     
         kingMoves(toRows, toCols,i, pastMove1,currentMove1)
     else:
@@ -242,7 +152,7 @@ def validPOS1(Player1, Player2, currentMove1,pastMove1,i):
                         response = True
 
                     if (grid[POSX][POSL] == "_ " ): # check if there was a free spot 2 spaces away and then checks if pplayer 2 is a spot away. 
-                        if(grid[avaPOSX][avaPOSL] == Player2+" " or grid[avaPOSX][avaPOSR] == Player2.lower()+" "): 
+                        if(grid[avaPOSX][avaPOSL] == "W " or grid[avaPOSX][avaPOSR] == "w "): 
                             response = True
                 
                     elif (grid[avaPOSX][avaPOSR] == "_ "): 
@@ -250,7 +160,7 @@ def validPOS1(Player1, Player2, currentMove1,pastMove1,i):
                
                 
                     elif(grid[POSX][POSR] == "_ "):
-                        if(grid[avaPOSX][avaPOSR] == Player2+" " or grid[avaPOSX][avaPOSR] == Player2,lower()+" " ):
+                        if(grid[avaPOSX][avaPOSR] == "W " or grid[avaPOSX][avaPOSR] == "w " ):
                             response = True
                         
                     
@@ -272,10 +182,10 @@ def validPOS1(Player1, Player2, currentMove1,pastMove1,i):
 
         if (grid[newPOSX][newPOSY] == "_ "):
            
-            grid[newPOSX][newPOSY] = Player1+" "  #changes the avilabe space to B and the last space to _
+            grid[newPOSX][newPOSY] = "B "  #changes the avilabe space to B and the last space to _
             grid[toRows][toCols] = "_ "
             checkForOpponents(newPOSX, newPOSY, toRows ,toCols)
-            king1 = checkStatus(Player1, newPOSX, newPOSY)
+            king1 = checkStatus(newPOSX, newPOSY)
             
         
         elif (grid[newPOSX][newPOSY] != "_ "):
@@ -295,10 +205,10 @@ def checkForOpponents(newPOSX, newPOSY, toRows ,toCols): # only works when posti
         #Sqaure moves right 
         a = newPOSX - 1 #a and b coorindinates for opponent
         b = newPOSY - 1 
-        if(grid[a][b] == Player2+" " or (grid[a][b] == Player2.lower()+" ")):
+        if(grid[a][b] == "W " or (grid[a][b] == "w ")):
             grid[a][b] = "_ "
             
-        elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
+        elif(grid[a][b] == "_ " or grid[a][b] == "B "):
             print("No Piece to Take")
             
     if (newPOSY-toCols == -2): #sqaure moved left
@@ -306,21 +216,21 @@ def checkForOpponents(newPOSX, newPOSY, toRows ,toCols): # only works when posti
         a = newPOSX -1
         b = newPOSY + 1
         
-        if(grid[a][b] == Player2+" " or (grid[a][b] == Player2.lower()+" ")):
+        if(grid[a][b] == "W " or (grid[a][b] == "w ")):
             grid[a][b] = "_ "
             
                     
-        elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
+        elif(grid[a][b] == "_ " or grid[a][b] == "B "):
             print("No Piece to Take")
         
 
     return
 
-def checkStatus(Player1,newPOSX, newPOSY):
+def checkStatus(newPOSX, newPOSY):
 
     if(newPOSX == 7):
-        grid[newPOSX][newPOSY] = Player1.lower()+" "
-        king1 = Player1.lower()+" "
+        grid[newPOSX][newPOSY] = "b "
+        king1 = "b "
         return king1
     else:
         print("No king")
@@ -369,7 +279,7 @@ def kingMoves(toRows, toCols,i, pastMove1,curentMove1):
                     response = True
 
                 if (grid[POSX][POSL] == "_ " ):
-                    if(grid[avaPOSX][avaPOSL] == Player2+" " or grid[avaPOSX][avaPOSL] == Player2.lower()+" "):
+                    if(grid[avaPOSX][avaPOSL] == "W " or grid[avaPOSX][avaPOSL] == "w "):
                         response = True
                 if(grid[POSY][POSL] == "_ "):
                     response = True
@@ -381,11 +291,11 @@ def kingMoves(toRows, toCols,i, pastMove1,curentMove1):
                      response = True
             
                 elif(grid[POSX][POSR] == "_ "):
-                    if(grid[avaPOSX][avaPOSR] == Player2+" " or grid[avaPOSX][avaPOSR] == Player2.lower()+" "):
+                    if(grid[avaPOSX][avaPOSR] == "W " or grid[avaPOSX][avaPOSR] == "w "):
                         response = True
                     
                 elif(grid[POSY][POSR] == "_ "):
-                    if(grid[avaPOSY][avaPOSR] == Player2+" " or grid[avaPOSY][avaPOSR] == Player2.lower()+" "):
+                    if(grid[avaPOSY][avaPOSR] == "W " or grid[avaPOSY][avaPOSR] == "w "):
                         response = True
                         
                 if((grid[avaPOSX][avaPOSL] != "_ ") and (grid[avaPOSX][avaPOSR] != "_ ") and (grid[POSX][POSR] != "_ ") and (grid[POSX][POSL] != "_ ")
@@ -408,7 +318,7 @@ def kingMoves(toRows, toCols,i, pastMove1,curentMove1):
     print(newPOSX,newPOSY)  
 
     if (grid[newPOSX][newPOSY] == "_ "):  
-        grid[newPOSX][newPOSY] = Player1.lower()+" "
+        grid[newPOSX][newPOSY] = "b "
         grid[toRows][toCols] = "_ "
         kingOpponents(newPOSX, newPOSY, toRows ,toCols)
                 
@@ -427,19 +337,19 @@ def kingOpponents(newPOSX, newPOSY, toRows ,toCols):
            
             a = newPOSX - 1 #a and b coorindinates for opponent
             b = newPOSY - 1
-            print(Player2) 
-            if(grid[a][b] == Player2+" " or grid[a][b] == Player2.lower()+" "):
+            print() 
+            if(grid[a][b] == "W " or grid[a][b] == "w "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
+            elif(grid[a][b] == "_ " or grid[a][b] == "B "):
                 print("No Piece to Take")
                 
         elif((newPOSX-toRows)== -2): #sqaure moved up
             a = newPOSX + 1 #a and b coorindinates for opponent
             b = newPOSY - 1
-            print(Player2) 
-            if(grid[a][b] == Player2+" " or grid[a][b] == Player2.lower()+" "):
+            print() 
+            if(grid[a][b] == "W " or grid[a][b] == "w "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
+            elif(grid[a][b] == "_ " or grid[a][b] == "B "):
                 print("No Piece to Take")
         
         
@@ -449,18 +359,18 @@ def kingOpponents(newPOSX, newPOSY, toRows ,toCols):
            
             a = newPOSX - 1 #a and b coorindinates for opponent
             b = newPOSY + 1
-            if(grid[a][b] == Player2+" " or grid[a][b] == Player2.lower()+" "):
+            if(grid[a][b] == "W " or grid[a][b] == "w "):
                 grid[a][b] = "_ "
                 
-            elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
+            elif(grid[a][b] == "_ " or grid[a][b] == "B "):
                 print("No Piece to Take")
          elif((newPOSX-toRows)== -2): #sqaure moved up
             a = newPOSX + 1 #a and b coorindinates for opponent
             b = newPOSY + 1
             
-            if(grid[a][b] == Player2+" " or grid[a][b] == Player2.lower()+" "):
+            if(grid[a][b] == "W " or grid[a][b] == "w "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == Player1+" "):
+            elif(grid[a][b] == "_ " or grid[a][b] == "B "):
                 print("No Piece to Take")
       
     return newPOSX, newPOSY, toRows ,toCols
@@ -469,7 +379,7 @@ def kingOpponents(newPOSX, newPOSY, toRows ,toCols):
     
 
 
-def secondMoves(Player2,j):
+def secondMoves(j):
     print("Player 2's Turn")
     draw_grid(grid)
             
@@ -478,12 +388,12 @@ def secondMoves(Player2,j):
         currentMove2.pop()
         undo_feature(i,pastMove1,currentMove1)
     else:
-        validPOS2(Player2, currentMove2, pastMove2,j)
+        validPOS2(currentMove2, pastMove2,j)
 
 
     return grid
 
-def validPOS2(Player2, currentMove2, pastMove2,j):
+def validPOS2(currentMove2, pastMove2,j):
     toRows  = int (currentMove2[j][0:1]) #Converts the sliced string to an int
     toCols  = int (currentMove2[j][2:3])
 
@@ -495,7 +405,7 @@ def validPOS2(Player2, currentMove2, pastMove2,j):
     POSL = toCols -2
     POSR = toCols +2
 
-    if(grid[toRows][toCols] == Player2.lower()+" "):
+    if(grid[toRows][toCols] == "w "):
     
         king2Moves(toRows, toCols,j, pastMove2,currentMove2)
     else:
@@ -519,14 +429,14 @@ def validPOS2(Player2, currentMove2, pastMove2,j):
                         response = True
                         
                     if (grid[POSX][POSL] == "_ " ):
-                        if(grid[avaPOSX][avaPOSL] == Player1+" " or grid[avaPOSX][avaPOSL] == Player1.lowert()+" "):
+                        if(grid[avaPOSX][avaPOSL] == "B " or grid[avaPOSX][avaPOSL] == "b "):
                             response = True
                 
                     if (grid[avaPOSX][avaPOSR] == "_ "):
                         response = True 
 
                     if(grid[POSX][POSR] == "_ "):
-                        if(grid[avaPOSX][avaPOSR] == Player1+" " or grid[avaPOSX][avaPOSR] == Player1.lower()+" "):
+                        if(grid[avaPOSX][avaPOSR] == "B " or grid[avaPOSX][avaPOSR] == "b "):
                             response = True
                         
                     
@@ -546,10 +456,10 @@ def validPOS2(Player2, currentMove2, pastMove2,j):
         print(pastMove2)
                
         if (grid[newPOSX][newPOSY] == "_ "):  
-            grid[newPOSX][newPOSY] = Player2+" "  #changes the avilabe space to B and the last space to _
+            grid[newPOSX][newPOSY] = "W "  #changes the avilabe space to B and the last space to _
             grid[toRows][toCols] = "_ "
             checkForOppo(newPOSX, newPOSY, toRows,toCols)
-            king2 = check2Status(Player2, newPOSX, newPOSY)
+            king2 = check2Status(newPOSX, newPOSY)
             
         
         elif (grid[newPOSX][newPOSY] != "_ "):
@@ -565,27 +475,27 @@ def checkForOppo(newPOSX, newPOSY, toRows ,toCols): # only works when postions a
         a = newPOSX + 1 #a and b coorindinates for opponent
         b = newPOSY - 1
         
-        if(grid[a][b] == Player1+" " or grid[a][b] == Player1.lower()+" "):
+        if(grid[a][b] == "B " or grid[a][b] == "b "):
             grid[a][b] = "_ "
-        elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
+        elif(grid[a][b] == "_ " or grid[a][b] == "W "):
             print("No Piece to Take")
             
     if (newPOSY-toCols == -2): #sqaure moved left
         a = newPOSX + 1
         b = newPOSY + 1
-        if(grid[a][b] == Player1+" " or grid[a][b] == Player1.lower()+" "):
+        if(grid[a][b] == "B " or grid[a][b] == "b "):
             grid[a][b] = "_ "
-        elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
+        elif(grid[a][b] == "_ " or grid[a][b] == "W "):
             print("No Piece to Take")
         
 
     return 
 
-def check2Status(Player1,newPOSX, newPOSY):
+def check2Status(newPOSX, newPOSY):
 
     if(newPOSX == 0):
-        grid[newPOSX][newPOSY] = Player2.lower()+" "
-        king2 = Player2.lower()+" "
+        grid[newPOSX][newPOSY] = "w "
+        king2 = "w "
         return king2
     else:
         print("No king")
@@ -632,11 +542,11 @@ def king2Moves(toRows, toCols, j, pastMove2):
                     response = True
 
                 if (grid[POSX][POSL] == "_ " ):
-                    if(grid[avaPOSX][avaPOSL] == Player1+" " or grid[avaPOSX][avaPOSL] == Player1.lower()+" "):
+                    if(grid[avaPOSX][avaPOSL] == "B " or grid[avaPOSX][avaPOSL] == "b "):
                         response = True
                         
                 if(grid[POSY][POSL] == "_ "):
-                    if(grid[avaPOSY][avaPOSL] == Player1+" " or grid[avaPOSY][avaPOSL] == Player1.lower()+" "):
+                    if(grid[avaPOSY][avaPOSL] == "B " or grid[avaPOSY][avaPOSL] == "b "):
                         response = True
             
                 elif (grid[avaPOSX][avaPOSR] == "_ "):
@@ -646,11 +556,11 @@ def king2Moves(toRows, toCols, j, pastMove2):
                      response = True
             
                 elif(grid[POSX][POSR] == "_ "):
-                    if(grid[avaPOSX][avaPOSR] == Player1+" " or grid[avaPOSX][avaPOSR] == Player1.lower()+" "):
+                    if(grid[avaPOSX][avaPOSR] == "B " or grid[avaPOSX][avaPOSR] == "b "):
                         response = True
                     
                 elif(grid[POSY][POSR] == "_ "):
-                    if(grid[avaPOSY][avaPOSR] == Player1+" " or grid[avaPOSY][avaPOSR] == Player1.lower()+" "):
+                    if(grid[avaPOSY][avaPOSR] == "B " or grid[avaPOSY][avaPOSR] == "b "):
                         response = True
                         
                 if((grid[avaPOSX][avaPOSL] != "_ ") and (grid[avaPOSX][avaPOSR] != "_ ") and (grid[POSX][POSR] != "_ ") and (grid[POSX][POSL] != "_ ")
@@ -674,7 +584,7 @@ def king2Moves(toRows, toCols, j, pastMove2):
         
     if (grid[newPOSX][newPOSY] == "_ "):  
       
-        grid[newPOSX][newPOSY] = Player2.lower()+" "  #changes the avilabe space to B and the last space to _
+        grid[newPOSX][newPOSY] = "w "  #changes the avilabe space to B and the last space to _
         grid[toRows][toCols] = "_ "
         kingOppo(newPOSX, newPOSY, toRows  ,toCols)
                         
@@ -694,18 +604,18 @@ def kingOppo(newPOSX, newPOSY, toRows ,toCols):
            
             a = newPOSX - 1 #a and b coorindinates for opponent
             b = newPOSY - 1 
-            if(grid[a][b] == Player1+" " or grid[a][b] == Player1.lower()+" "):
+            if(grid[a][b] == "B " or grid[a][b] == "b "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
+            elif(grid[a][b] == "_ " or grid[a][b] == "W "):
                 print("No Piece to Take")
                 
         elif((newPOSX-toRows)== -2): #sqaure moved up
             a = newPOSX + 1 #a and b coorindinates for opponent
             b = newPOSY - 1
            
-            if(grid[a][b] == Player1+" " or grid[a][b] == Player1.lower()+" "):
+            if(grid[a][b] == "B " or grid[a][b] == "b "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
+            elif(grid[a][b] == "_ " or grid[a][b] == "W "):
                 print("No Piece to Take")
         
         
@@ -715,20 +625,126 @@ def kingOppo(newPOSX, newPOSY, toRows ,toCols):
            
             a = newPOSX - 1 #a and b coorindinates for opponent
             b = newPOSY + 1
-            if(grid[a][b] == Player1+" " or grid[a][b] == Player1.lower()+" "):
+            if(grid[a][b] == "B " or grid[a][b] == "b "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
+            elif(grid[a][b] == "_ " or grid[a][b] == "W "):
                 print("No Piece to Take")
                 
          elif((newPOSX-toRows)== -2): #sqaure moved up
             a = newPOSX + 1 #a and b coorindinates for opponent
             b = newPOSY + 1
             
-            if(grid[a][b] == Player1+" " or grid[a][b] == Player1.lower()+" "):
+            if(grid[a][b] == "B " or grid[a][b] == "b "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == Player2+" "):
+            elif(grid[a][b] == "_ " or grid[a][b] == "W "):
                 print("No Piece to Take")
 
+def AIMoves(j):
+   
+    for r in range(height):
+        for c in range(width):
+            if(grid[r][c] == "W "):
+                 print(r,c)
+                 checkIfMove(r,c,possibleStartMove,possibleEndMove)                
+    print(possibleStartMove)
+    print(possibleEndMove)
+    selectPiece = random.choice(possibleStartMove)
+    newPositionIndex = possibleStartMove.index(selectPiece)
+    newPosition  = possibleEndMove[newPositionIndex]
+    
+    toRows  = selectPiece[0]#Converts the sliced string to an int
+    toCols  = selectPiece[1]
+    newRows = newPosition[0]
+    newCols = newPosition[1]
+    print(toRows, toCols)
+    print(newRows, newCols)
+    checkAIOpponents(newCols,toCols,newRows)
+
+    grid[toRows][toCols] = "_ "
+    grid[newRows][newCols] = "W "
+    possibleStartMove.clear()
+    possibleEndMove.clear()
+
+def checkIfMove(r,c,possibleStartMove,possibleEndMove):
+    avaPOSX = r - 1
+    avaPOSL = c - 1
+    avaPOSR = c + 1
+
+    POSX = avaPOSX -1 #Looks for an open space either to the left or the right
+    POSL = avaPOSL -1
+    POSR = avaPOSR +1
+    
+    if((avaPOSX < 0 or avaPOSX > 7) or (avaPOSL <0 or avaPOSL > 7) or (avaPOSR < 0 or avaPOSR > 7)):
+        return r, c
+    else:
+        print("entered the other section")
+    
+        if((grid[avaPOSX][avaPOSL] != "_ ") or (grid[avaPOSX][avaPOSR] != "_ ") or (grid[avaPOSX][avaPOSL] == "W ") or (grid[avaPOSX][avaPOSR] == "W ")):
+            print(r,c, " Returned. No Value")
+
+        if (grid[avaPOSX][avaPOSL] == "_ "):
+            if((avaPOSX < 0 or avaPOSX > 7) or (avaPOSL < 0 or avaPOSL > 7)):
+                if(grid[avaPOSX][avaPOSR]== "_ "):
+                    print("Moved to the right")
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSX,avaPOSR))
+                    return possibleStartMove, possibleEndMove
+                else:
+                    print("Excuse me ")
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSX,avaPOSL))
+                    return possibleStartMove, possibleEndMove
+
+
+        if(grid[avaPOSX][avaPOSR]== "_ "):
+            if((avaPOSX < 0 or avaPOSX > 7) or (avaPOSR < 0 or avaPOSR > 7)):
+                if (grid[avaPOSX][avaPOSL] == "_ "):
+                    print("Moved to the left")
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSX,avaPOSL))
+                    return possibleStartMove, possibleEndMove
+            else:
+                possibleStartMove.append((r,c))
+                possibleEndMove.append((avaPOSX, avaPOSR))
+                return possibleStartMove, possibleEndMove
+##
+##        if(grid[POSX][POSR] == "_ "):
+##             if(grid[avaPOSX][avaPOSR] == "B "):
+##                 possibleStartMove.append((r,c))
+##                 possibleEndMove.append((POSX, POSR))
+##                 return possibleStartMove, possibleEndMove
+##                    
+##        if(grid[POSX][POSL] == "_ "):
+##             if(grid[avaPOSX][avaPOSL] == "B "):
+##                 possibleStartMove.append((r,c))
+##                 possibleEndMove.append((POSX, POSl))
+##                 return possibleStartMove, possibleEndMove
+                        
+
+def checkAIOpponents(newCols,toCols,newRows):
+    print("ENtered AI Oppo")
+    if ((newCols-toCols) == 2):
+        #Sqaure moved right 
+        a = newRows + 1 #a and b coorindinates for opponent
+        b = newCols - 1
+        
+        if(grid[a][b] == +" " or grid[a][b] == +" "):
+            grid[a][b] = "_ "
+            return  firstMove(i)
+        elif(grid[a][b] == "_ " or grid[a][b] == +" "):
+            print("No Piece to Take")
+            
+    if (newCols-toCols == -2): #sqaure moved left
+        a = newRows + 1
+        b = newCols + 1
+        if(grid[a][b] == "B " or grid[a][b] == "b "):
+            grid[a][b] = "_ "
+            return  firstMove(i)
+        elif(grid[a][b] == "_ " or grid[a][b] == +"W "):
+            print("No Piece to Take")
+
+    return
+    
 def undo_feature(i,pastMove1,currentMove1):
     i-=1
     print("Undo Selected")
@@ -747,11 +763,11 @@ def undo_feature(i,pastMove1,currentMove1):
     if (grid[toRows][toCols] == "_ "):
            
             grid[newPOSX][newPOSY] = "_ "  #changes the avilabe space to B and the last space to _
-            grid[toRows][toCols] = Player1+" "
+            grid[toRows][toCols] = "B "
            
             print(i)
             print("Move Deleted")
-            return firstMove(Player1), i
+            return firstMove(), i
 
 def undo_feature_2(j,pastMove2,currentMove2):
     j-=1
@@ -771,11 +787,11 @@ def undo_feature_2(j,pastMove2,currentMove2):
     if (grid[toRows][toCols] == "_ "):
            
             grid[newPOSX][newPOSY] = "_ "  #changes the avilabe space to B and the last space to _
-            grid[toRows][toCols] = Player2+" "
+            grid[toRows][toCols] = "W "
            
             print(j)
             print("Move Deleted")
-            return secondMoves(Player2,j)
+            return secondMoves(j)
 
 
 
@@ -793,6 +809,9 @@ pastMove1=[]
 pastMove2=[]
 currentMove1=[]
 currentMove2=[]
+possibleStartMove =[]
+possibleEndMove =[]
+
 
 i = 0
 j = 0                      
@@ -804,11 +823,10 @@ opponent = input("Select your opponent \n1. Computer\n2. Human")
 if(opponent == '1'):
     print("You have selected Computer")
     grid = init_board()
-    (Player1, Player2) = setPlayers()
     while(stilPieces(bool) == False):
-        firstMove(Player1)
+        firstMove(i)
         i+=1
-        secondMoves(Player2)
+        AIMoves(j)
         j+=1
         
     print("Game Ended")
@@ -816,12 +834,10 @@ if(opponent == '1'):
 elif(opponent == '2'):
     print("You have selected human")
     grid = init_board()
-    (Player1, Player2) = setPlayers()
     while(stilPieces(bool) == False):
-        firstMove(Player1,i)
+        firstMove(i)
         i+=1
-        secondMoves(Player2,j)
+        secondMoves(j)
         j+=1
         
     print("Game Ended")
-

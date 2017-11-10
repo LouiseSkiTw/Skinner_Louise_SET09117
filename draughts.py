@@ -12,6 +12,7 @@ def instruction():
     print("     8. Kings will be changed to 'b' & 'w'\n")
 
 
+
 def init_board(): #Intializes the board :
     grid = [[0 for x in range(width)] for y in range(height)] # creates the list 
 
@@ -97,31 +98,33 @@ def draw_grid(grid):
             print(grid[x][y], end="")
     return grid
         
-
 def firstMove(i):
     print("Player 1's Turn")
     draw_grid(grid)
-    re = False
-    
-    currentMove1.append(input("Select piece to move"))
-    while((currentMove1[i] == "") and re == False):
-        print(currentMove1[i])
-        if(currentMove1[i] == "undo"):
-            re = True
-            currentMove1.pop()
-            undo_feature_2(j,pastMove2,currentMove2)
-        if(currentMove1[i] != ""): 
-            print("Hiya")
-            re = True
+    response = False
 
-        if(currentMove1[i] == ""):
+    currentMove1.append(input("Select piece to move"))
+    while(currentMove1[i] == "" and response == False):
+
+            
+        if(currentMove1[i]== ""):
             currentMove1.pop()
             currentMove1.append(input("Select piece to move"))
+    else:
+        response = True
+        print(currentMove1)
+        
+    if(currentMove1[i] == "redo"):
+        currentMove1.pop()
+        redoFeature(i, pastMove1, currentMove1)
             
-    validPOS1(currentMove1, pastMove1,i) #Another Function
-    stilPieces(bool)
-
-    return 
+    if(currentMove1[i] == "undo"):
+         currentMove1.pop()
+         undo_feature_2(j,pastMove2,currentMove2,redoFeature2POS1,redoFeature2POS2)
+    else:
+        validPOS1(currentMove1, pastMove1,i) #Another Function
+        stilPieces(bool)
+    return grid
 
 def validPOS1(currentMove1,pastMove1,i):
     toRows  = int (currentMove1[i][0:1]) #Converts the sliced string to an int
@@ -153,35 +156,39 @@ def validPOS1(currentMove1,pastMove1,i):
                 avaPOSX = toRows + 1
                 avaPOSL = toCols - 1
                 avaPOSR = toCols + 1
+          
+            while(((grid[toRows][toCols]!= "B ")or(grid[avaPOSX][avaPOSL] != "_ ") or (grid[avaPOSX][avaPOSR] != "_ ") or (grid[POSX][POSR] != "_ ")
+                   or( grid[POSX][POSL] != "_ "))  and response == False):
                 
-                
-            else:
-                while(((grid[avaPOSX][avaPOSL] != "_ ") or (grid[avaPOSX][avaPOSR] != "_ ") or (grid[POSX][POSR] != "_ ")
-                       or( grid[POSX][POSL] != "_ "))  and response == False):
-
-                    if (grid[avaPOSX][avaPOSL] == "_ " ): #if the ava POS has a space
-                        response = True
-
-                    if (grid[POSX][POSL] == "_ " ): # check if there was a free spot 2 spaces away and then checks if pplayer 2 is a spot away. 
-                        if(grid[avaPOSX][avaPOSL] == "W " or grid[avaPOSX][avaPOSR] == "w "): 
-                            response = True
-                
-                    elif (grid[avaPOSX][avaPOSR] == "_ "): 
-                        response = True
-               
-                
-                    elif(grid[POSX][POSR] == "_ "):
-                        if(grid[avaPOSX][avaPOSR] == "W " or grid[avaPOSX][avaPOSR] == "w " ):
-                            response = True
-                        
+                if(grid[toRows][toCols]== "B "):
+                    response = True
                     
-                    if((grid[avaPOSX][avaPOSL] != "_ ") and (grid[avaPOSX][avaPOSR] != "_ ") and (grid[POSX][POSR] != "_ ") and (grid[POSX][POSL] != "_ ")):
-                            currentMove1.append(input("Select piece to move"))
-                            toRows  = int (currentMove1[i][0:1]) #Converts the sliced string to an int
-                            toCols  = int (currentMove1[i][2:3])
-                            avaPOSX = toRows + 1 #chnages the coordinates to llok for the avaliable spaces near by
-                            avaPOSL = toCols - 1
-                            avaPOSR = toCols + 1
+                if (grid[avaPOSX][avaPOSL] == "_ " ): #if the ava POS has a space
+                    response = True
+
+                if (grid[POSX][POSL] == "_ " ): # check if there was a free spot 2 spaces away and then checks if pplayer 2 is a spot away. 
+                    if(grid[avaPOSX][avaPOSL] == "W " or grid[avaPOSX][avaPOSL] == "w "): 
+                        response = True
+            
+                elif (grid[avaPOSX][avaPOSR] == "_ "): 
+                    response = True
+           
+            
+                elif(grid[POSX][POSR] == "_ "):
+                    if(grid[avaPOSX][avaPOSR] == "W " or grid[avaPOSX][avaPOSR] == "w " ):
+                        response = True
+                    
+                
+                if((grid[toRows][toCols] != "B ")or(grid[avaPOSX][avaPOSL] != "_ ") and (grid[avaPOSX][avaPOSR] != "_ ") and (grid[POSX][POSR] != "_ ") and (grid[POSX][POSL] != "_ ")):
+
+                        currentMove1.pop()
+                        currentMove1.append(input("Selcet A Moveable Piece"))
+                        toRows  = int (currentMove1[i][0:1]) #Converts the sliced string to an int
+                        toCols  = int (currentMove1[i][2:3])
+
+                        avaPOSX = toRows + 1 #chnages the coordinates to llok for the avaliable spaces near by
+                        avaPOSL = toCols - 1
+                        avaPOSR = toCols + 1   
            
                             
     pastMove1.append(input("Select New Postion"))
@@ -194,7 +201,7 @@ def validPOS1(currentMove1,pastMove1,i):
     while(grid[newPOSX][newPOSY] != "_ " and re ==False):
                 
         if (grid[newPOSX][newPOSY] != "_ "):
-             pastMove1.pop()
+             pastMove1.pop(i)
              pastMove1.append(input("Unvalid Move! Select A New Postion"))
              newPOSX  = int (pastMove1[i][0:1]) #temp coordinates
              newPOSY  = int (pastMove1[i][2:3])
@@ -204,12 +211,9 @@ def validPOS1(currentMove1,pastMove1,i):
         grid[newPOSX][newPOSY] = "B "  #changes the avilabe space to B and the last space to _
         grid[toRows][toCols] = "_ "
         checkForOpponents(newPOSX, newPOSY, toRows ,toCols)
-        king1 = checkStatus(newPOSX, newPOSY)
+        checkStatus(newPOSX, newPOSY)
 
-       
-             
-
-    return pastMove1, grid, toRows,toCols, i 
+        return pastMove1, grid, toRows,toCols, i 
 
 
 def checkForOpponents(newPOSX, newPOSY, toRows ,toCols): # only works when postions are valid.
@@ -221,8 +225,6 @@ def checkForOpponents(newPOSX, newPOSY, toRows ,toCols): # only works when posti
         if(grid[a][b] == "W " or (grid[a][b] == "w ")):
             grid[a][b] = "_ "
             
-        elif(grid[a][b] == "_ " or grid[a][b] == "B "):
-            print("No Piece to Take")
             
     if (newPOSY-toCols == -2): #sqaure moved left
       
@@ -231,11 +233,6 @@ def checkForOpponents(newPOSX, newPOSY, toRows ,toCols): # only works when posti
         
         if(grid[a][b] == "W " or (grid[a][b] == "w ")):
             grid[a][b] = "_ "
-            
-                    
-        elif(grid[a][b] == "_ " or grid[a][b] == "B "):
-            print("No Piece to Take")
-        
 
     return
 
@@ -243,8 +240,6 @@ def checkStatus(newPOSX, newPOSY):
 
     if(newPOSX == 7):
         grid[newPOSX][newPOSY] = "b "
-        king1 = "b "
-        return king1
     else:
         print("No king")
         return False
@@ -294,8 +289,10 @@ def kingMoves(toRows, toCols,i, pastMove1,curentMove1):
                 if (grid[POSX][POSL] == "_ " ):
                     if(grid[avaPOSX][avaPOSL] == "W " or grid[avaPOSX][avaPOSL] == "w "):
                         response = True
+                        
                 if(grid[POSY][POSL] == "_ "):
-                    response = True
+                    if(grid[avaPOSY][avaPOSL] == "W " or grid[avaPOSY][avaPOSL] == "w "):
+                        response = True
             
                 elif (grid[avaPOSX][avaPOSR] == "_ "):
                     response = True
@@ -323,22 +320,27 @@ def kingMoves(toRows, toCols,i, pastMove1,curentMove1):
                         avaPOSR = toCols + 1
        
                         
-    pastMove1.append(input("Select New Postion"))
-    print(pastMove1)
+        pastMove1.append(input("Select New Postion"))
+        print(pastMove1)
 
-    newPOSX  = int (pastMove1[i][0:1]) #temp coordinates
-    newPOSY  =  int (pastMove1[i][2:3])
-    print(newPOSX,newPOSY)  
+        newPOSX  = int(pastMove1[i][0:1]) #temp coordinates
+        newPOSY  =  int(pastMove1[i][2:3])
+        re = False
 
-    if (grid[newPOSX][newPOSY] == "_ "):  
-        grid[newPOSX][newPOSY] = "b "
-        grid[toRows][toCols] = "_ "
-        kingOpponents(newPOSX, newPOSY, toRows ,toCols)
-                
-    elif (grid[newPOSX][newPOSY] != "_ "):
-        pastMove1.append(("Unvalid Move! Select A New Postion"))
-        newPOSX  = int (pastMove1[0:1]) #temp coordinates
-        newPOSY  = int (pastMove1[2:3])
+        while(grid[newPOSX][newPOSY] != "_ " and re ==False):
+                    
+            if (grid[newPOSX][newPOSY] != "_ "):
+                 pastMove1.pop()
+                 pastMove1.append(input("Unvalid Move! Select A New Postion"))
+                 newPOSX  = int (pastMove1[i][0:1]) #temp coordinates
+                 newPOSY  = int (pastMove1[i][2:3])
+                 
+        else:
+            re = True
+            grid[newPOSX][newPOSY] = "B "  #changes the avilabe space to B and the last space to _
+            grid[toRows][toCols] = "_ "
+            checkForOpponents(newPOSX, newPOSY, toRows ,toCols)
+            king1 = checkStatus(newPOSX, newPOSY)
             
         
     
@@ -353,8 +355,6 @@ def kingOpponents(newPOSX, newPOSY, toRows ,toCols):
             print() 
             if(grid[a][b] == "W " or grid[a][b] == "w "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == "B "):
-                print("No Piece to Take")
                 
         elif((newPOSX-toRows)== -2): #sqaure moved up
             a = newPOSX + 1 #a and b coorindinates for opponent
@@ -362,8 +362,6 @@ def kingOpponents(newPOSX, newPOSY, toRows ,toCols):
             print() 
             if(grid[a][b] == "W " or grid[a][b] == "w "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == "B "):
-                print("No Piece to Take")
         
         
             
@@ -375,114 +373,129 @@ def kingOpponents(newPOSX, newPOSY, toRows ,toCols):
             if(grid[a][b] == "W " or grid[a][b] == "w "):
                 grid[a][b] = "_ "
                 
-            elif(grid[a][b] == "_ " or grid[a][b] == "B "):
-                print("No Piece to Take")
          elif((newPOSX-toRows)== -2): #sqaure moved up
             a = newPOSX + 1 #a and b coorindinates for opponent
             b = newPOSY + 1
             
             if(grid[a][b] == "W " or grid[a][b] == "w "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == "B "):
-                print("No Piece to Take")
-      
-    return newPOSX, newPOSY, toRows ,toCols
-     
-    
-    
 
+    return newPOSX, newPOSY, toRows ,toCols
 
 def secondMoves(j):
     print("Player 2's Turn")
     draw_grid(grid)
-            
+    response = False
+    
     currentMove2.append(input("Select piece to move"))
-    if (currentMove2[j] == "undo"):
+    while(currentMove2[j] == "" and response == False):
+        if(currentMove2[j]== ""):
+            currentMove2.pop()
+            currentMove2.append(input("Select piece to move"))
+    else:
+        response = True
+        print(currentMove2)
+        
+    if(currentMove2[j] == "redo"):
+        currentMove2.pop()
+        redo_feature2(j, pastMove2, currentMove2)
+            
+    if(currentMove2[j] == "undo"):
         currentMove2.pop()
         undo_feature(i,pastMove1,currentMove1,redoFeaturePOS1,redoFeaturePOS2)
-    elif(currentMove2[j] == "redo"):
-        redo_feature(i, pastMove1, currentMove1)
     else:
-        validPOS2(currentMove2, pastMove2,j)
-
-
+        validPOS2(currentMove2, pastMove2,j) #Another Functio
     return grid
+
 
 def validPOS2(currentMove2, pastMove2,j):
     toRows  = int (currentMove2[j][0:1]) #Converts the sliced string to an int
     toCols  = int (currentMove2[j][2:3])
 
-    avaPOSX = toRows - 1 #chnages the coordinates to llok for the avaliable spaces near by
+    avaPOSX = toRows + 1 #chnages the coordinates to llok for the avaliable spaces near by
     avaPOSL = toCols - 1
     avaPOSR = toCols + 1
 
-    POSX = toRows -2 #Looks for an open space either to the left or the right
-    POSL = toCols -2
-    POSR = toCols +2
+    POSX = toRows + 2
+    POSL = toCols - 2
+    POSR = toCols + 2
+
 
     if(grid[toRows][toCols] == "w "):
     
-        king2Moves(toRows, toCols,j, pastMove2,currentMove2)
+        kingMoves(toRows, toCols,j, pastMove2,currentMove2)
     else:
-
+        
         response = False
-        if((toRows < 0 or toRows >7) or (toCols < 0 or toCols > 7)):
-            if((avaPOSX <0 or avaPOSX > 7) or (avaPOSL <0 or avaPOSL >7) or (avaPOSR <0 and avaPOSR >7)):   
+        
+        if((toRows < 0 or toRows >7) or (toCols < 0 or toCols > 7)): #checks if the input is in range
+            if((avaPOSX <0 or avaPOSX > 7) or (avaPOSL <0 or avaPOSL >7) or (avaPOSR <0 and avaPOSR >7)):#checka whether the avalaible pos are in range
                 print("Out of Range")
-                currentMove2.append(input("Select piece to move"))
+                currentMove1.append(input("Select piece to move"))
                 toRows  = int (currentMove2[j][0:1]) #Converts the sliced string to an int
                 toCols  = int (currentMove2[j][2:3])
 
                 avaPOSX = toRows + 1
-                avaPOSY = toRows -1
                 avaPOSL = toCols - 1
                 avaPOSR = toCols + 1
-            else:
-                while(((grid[avaPOSX][avaPOSL] != "_ ") or (grid[avaPOSX][avaPOSR] != "_ ") or (grid[POSX][POSR] != "_ ") or( grid[POSX][POSL] != "_ "))  and response == False):
-
-                    if (grid[avaPOSX][avaPOSL] == "_ " ):
-                        response = True
-                        
-                    if (grid[POSX][POSL] == "_ " ):
-                        if(grid[avaPOSX][avaPOSL] == "B " or grid[avaPOSX][avaPOSL] == "b "):
-                            response = True
+          
+            while(((grid[toRows][toCols]!= "W ")or(grid[avaPOSX][avaPOSL] != "_ ") or (grid[avaPOSX][avaPOSR] != "_ ") or (grid[POSX][POSR] != "_ ")
+                   or( grid[POSX][POSL] != "_ "))  and response == False):
                 
-                    if (grid[avaPOSX][avaPOSR] == "_ "):
-                        response = True 
-
-                    if(grid[POSX][POSR] == "_ "):
-                        if(grid[avaPOSX][avaPOSR] == "B " or grid[avaPOSX][avaPOSR] == "b "):
-                            response = True
-                        
+                if(grid[toRows][toCols]== "W "):
+                    response = True
                     
-                    if((grid[avaPOSX][avaPOSL] != "_ ") and (grid[avaPOSX][avaPOSR] != "_ ") and (grid[POSX][POSR] != "_ ") and (grid[POSX][POSL] != "_ ")):
-                            currentMove2.append(input("Select piece to move"))
-                            toRows  = int (currentMove2[j][0:1]) #Converts the sliced string to an int
-                            toCols  = int (currentMove2[j][2:3])
+                if (grid[avaPOSX][avaPOSL] == "_ " ): #if the ava POS has a space
+                    response = True
 
-                            avaPOSX = toRows + 1 #chnages the coordinates to llok for the avaliable spaces near by
-                            avaPOSL = toCols - 1
-                            avaPOSR = toCols + 1
-                
-        pastMove2.append(input("Select New Postion"))
-        newPOSX  = int (pastMove2[j][0:1]) #temp coordinates
-        newPOSY  = int (pastMove2[j][2:3])
-
-        print(pastMove2)
-               
-        if (grid[newPOSX][newPOSY] == "_ "):  
-            grid[newPOSX][newPOSY] = "W "  #changes the avilabe space to B and the last space to _
-            grid[toRows][toCols] = "_ "
-            checkForOppo(newPOSX, newPOSY, toRows,toCols)
-            king2 = check2Status(newPOSX, newPOSY)
+                if (grid[POSX][POSL] == "_ " ): # check if there was a free spot 2 spaces away and then checks if pplayer 2 is a spot away. 
+                    if(grid[avaPOSX][avaPOSL] == "B " or grid[avaPOSX][avaPOSL] == "b "): 
+                        response = True
             
-        
-        elif (grid[newPOSX][newPOSY] != "_ "):
-             pastMove2 = input("Unvalid Move! Select A New Postion")
-             newPOSX  = int (pastMove2[0:1]) #temp coordinates
-             newPOSY  = int (pastMove2[2:3])
+                elif (grid[avaPOSX][avaPOSR] == "_ "): 
+                    response = True
+           
+            
+                elif(grid[POSX][POSR] == "_ "):
+                    if(grid[avaPOSX][avaPOSR] == "B " or grid[avaPOSX][avaPOSR] == "b " ):
+                        response = True
+                    
+                
+                if((grid[toRows][toCols] != "W ")or(grid[avaPOSX][avaPOSL] != "_ ") and (grid[avaPOSX][avaPOSR] != "_ ") and (grid[POSX][POSR] != "_ ") and (grid[POSX][POSL] != "_ ")):
 
-    return pastMove2, grid, toRows,toCols
+                        currentMove2.pop()
+                        currentMove2.append(input("Selcet A Moveable Piece"))
+                        toRows  = int (currentMove2[j][0:1]) #Converts the sliced string to an int
+                        toCols  = int (currentMove2[j][2:3])
+
+                        avaPOSX = toRows + 1 #chnages the coordinates to llok for the avaliable spaces near by
+                        avaPOSL = toCols - 1
+                        avaPOSR = toCols + 1   
+               
+                            
+    pastMove2.append(input("Select New Postion"))
+    print(pastMove2)
+
+    newPOSX  = int(pastMove2[j][0:1]) #temp coordinates
+    newPOSY  =  int(pastMove2[j][2:3])
+    re = False
+
+    while(grid[newPOSX][newPOSY] != "_ " and re ==False):
+                
+        if (grid[newPOSX][newPOSY] != "_ "):
+             pastMove2.pop(j)
+             pastMove2.append(input("Unvalid Move! Select A New Postion"))
+             newPOSX  = int (pastMove2[j][0:1]) #temp coordinates
+             newPOSY  = int (pastMove2[j][2:3])
+             
+    else:
+        re = True
+        grid[newPOSX][newPOSY] = "W "  #changes the avilabe space to B and the last space to _
+        grid[toRows][toCols] = "_ "
+        checkForOpponents(newPOSX, newPOSY, toRows ,toCols)
+        checkStatus(newPOSX, newPOSY)
+
+        return pastMove2, grid, toRows,toCols
 
 def checkForOppo(newPOSX, newPOSY, toRows ,toCols): # only works when postions are valid.
     if ((newPOSY-toCols) == 2):
@@ -510,8 +523,6 @@ def check2Status(newPOSX, newPOSY):
 
     if(newPOSX == 0):
         grid[newPOSX][newPOSY] = "w "
-        king2 = "w "
-        return king2
     else:
         print("No king")
         return False
@@ -621,18 +632,13 @@ def kingOppo(newPOSX, newPOSY, toRows ,toCols):
             b = newPOSY - 1 
             if(grid[a][b] == "B " or grid[a][b] == "b "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == "W "):
-                print("No Piece to Take")
-                
+        
         elif((newPOSX-toRows)== -2): #sqaure moved up
             a = newPOSX + 1 #a and b coorindinates for opponent
             b = newPOSY - 1
            
             if(grid[a][b] == "B " or grid[a][b] == "b "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == "W "):
-                print("No Piece to Take")
-        
         
             
     if (newPOSY-toCols == -2): #sqaure moved left
@@ -642,29 +648,448 @@ def kingOppo(newPOSX, newPOSY, toRows ,toCols):
             b = newPOSY + 1
             if(grid[a][b] == "B " or grid[a][b] == "b "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == "W "):
-                print("No Piece to Take")
-                
+
          elif((newPOSX-toRows)== -2): #sqaure moved up
             a = newPOSX + 1 #a and b coorindinates for opponent
             b = newPOSY + 1
             
             if(grid[a][b] == "B " or grid[a][b] == "b "):
+                grid[a][b] = "_ "                
+
+def AI1Moves(i):
+    print("Player 1")
+    draw_grid(grid)
+    for r in range(height):
+        for c in range(width):
+            if(grid[r][c] == "B "):
+                 checkIf1Move(r,c,possible1StartMove,possible1EndMove)
+                 valid1Jump(r,c,priority1Start, priority1End)
+            elif(grid[r][c] == "b "):
+               kingAI1Moves(r, c, possible1StartMove,possible1EndMove)
+               king1ValidJump(r,c,priority1Start, priority1End)
+               
+                 
+    if(priority1Start == []):
+        print(possible1StartMove)
+        print(possible1EndMove)
+        selectPiece = random.choice(possible1StartMove)
+        newPositionIndex = possible1StartMove.index(selectPiece)
+        newPosition  = possible1EndMove[newPositionIndex]
+        currentMove1.append(selectPiece)
+        pastMove1.append(newPosition)
+
+        
+    else:
+        print(priority1Start)
+        print(priority1End)
+        selectPiece = random.choice(priority1Start)
+        newPositionIndex = priority1Start.index(selectPiece)
+        newPosition  = priority1End[newPositionIndex]
+        
+    toRows  = selectPiece[0]#Converts the sliced string to an int
+    toCols  = selectPiece[1]
+    newRows = newPosition[0]
+    newCols = newPosition[1]
+    print(toRows, toCols)
+    print(newRows, newCols)
+    
+   
+    if(grid[toRows][toCols] == "b "):
+        kingAI1Oppo(newRows, newCols, toRows ,toCols)
+        grid[newRows][newCols] = "b "
+    else:
+        checkAI1Opponents(newCols,toCols,newRows)
+        grid[newRows][newCols] = "B "
+        
+    checkAI1Status(newRows, newCols)
+    grid[toRows][toCols] = "_ "
+    
+    possible1StartMove.clear()
+    possible1EndMove.clear()
+    priority1Start.clear()
+    priority1End.clear()
+    stilPieces(bool)
+   
+
+def checkIf1Move(r,c,possible1StartMove,possible1EndMove):
+    avaPOSX = r + 1
+    avaPOSL = c - 1
+    avaPOSR = c + 1
+    
+    if((avaPOSX < 0 or avaPOSX > 7) or (avaPOSL <-1 or avaPOSL > 7) or (avaPOSR < 0 or avaPOSR > 8)):
+        return r, c
+    else:
+        
+        if(c == 0 ):
+            if(grid[avaPOSX][avaPOSR]== "_ "):
+                possible1StartMove.append((r,c))
+                possible1EndMove.append((avaPOSX, avaPOSR))
+                return possible1StartMove, possible1EndMove
+            
+        elif(c == 7):
+             if(grid[avaPOSX][avaPOSL]== "_ "):
+                possible1StartMove.append((r,c))
+                possible1EndMove.append((avaPOSX, avaPOSL))
+                return possible1StartMove, possible1EndMove
+            
+        elif(c > 0 and c < 7):
+            if((grid[avaPOSX][avaPOSL] == "_ ") and (grid[avaPOSX][avaPOSR] == "_ ")):
+               possible1StartMove.append((r,c))
+               possible1EndMove.append((avaPOSX,avaPOSL))
+               possible1StartMove.append((r,c))
+               possible1EndMove.append((avaPOSX,avaPOSR))
+               
+            elif (grid[avaPOSX][avaPOSL] == "_ "):
+                possible1StartMove.append((r,c))
+                possible1EndMove.append((avaPOSX,avaPOSL))
+                return possible1StartMove, possible1EndMove
+
+            elif(grid[avaPOSX][avaPOSR]== "_ "):
+                possible1StartMove.append((r,c))
+                possible1EndMove.append((avaPOSX, avaPOSR))
+                return possible1StartMove, possible1EndMove
+                    
+        if((grid[avaPOSX][avaPOSL] != "_ ") or (grid[avaPOSX][avaPOSR] != "_ ") or (grid[avaPOSX][avaPOSL] == "B ") or (grid[avaPOSX][avaPOSR] == "B ")):
+            print(r,c, " Returned. No Value")
+
+def valid1Jump(r,c,priority1Start, priority1End):
+
+    POSX = r + 2 #Looks for an open space either to the left or the right
+    POSL = c - 2
+    POSR = c + 2
+
+    avaPOSX = r + 1
+    avaPOSL = c - 1
+    avaPOSR = c + 1
+    
+                
+    if((POSX < 0 or POSX > 7) or (POSL <0 or POSL > 7) or (POSR < 0 or POSR > 7)):
+            return
+    else:
+        if(((grid[POSX][POSR] == "_ ") and(grid[avaPOSX][avaPOSR] == "W ")) and ((grid[POSX][POSL] == "_ ") and (grid[avaPOSX][avaPOSL] == "W "))):
+             priority1Start.append((r,c))
+             priority1End.append((POSX, POSR))
+             priority1Start.append((r,c))
+             priority1End.append((POSX, POSL))
+             return priority1Start, priority1End
+            
+
+        elif(grid[POSX][POSR] == "_ "):
+             if(grid[avaPOSX][avaPOSR] == "W "):
+                 priority1Start.append((r,c))
+                 priority1End.append((POSX, POSR))
+                 return priority1Start, priority1End
+                        
+        elif(grid[POSX][POSL] == "_ "):
+             if(grid[avaPOSX][avaPOSL] == "W "):
+                 priority1Start.append((r,c))
+                 priority1End.append((POSX, POSL))
+                 return priority1Start, priority1End
+
+def checkAI1Opponents(newCols,toCols,newRows):
+    print("ENtered AI Oppo")
+    if ((newCols-toCols) == 2):
+        #Sqaure moved right 
+       a = newRows - 1 #a and b coorindinates for opponent
+       b = newCols - 1
+
+       if(grid[a][b] == "W " or grid[a][b] == "w "):
+            grid[a][b] = "_ "
+            return
+            
+    if (newCols-toCols == -2): #sqaure moved left
+        a = newRows - 1
+        b = newCols + 1
+        if(grid[a][b] == "W " or grid[a][b] == "w "):
+            grid[a][b] = "_ "
+            return
+      
+    return
+
+def checkAI1Status(newRows, newCols):
+
+    if(newRows == 7):
+        grid[newRows][newCols] = "b "
+        return
+    else:
+        print("No king")
+        return False
+
+def kingAI1Moves(r,c, possible1StartMove,possible1EndMove):
+    print("I am king")
+
+    avaPOSX = r + 1
+    avaPOSL = c - 1
+    avaPOSR = c + 1
+    avaPOSY = r - 1
+
+    if((avaPOSX < 0 or avaPOSX > 8) or (avaPOSL <-1 or avaPOSL > 7) or (avaPOSR < 0 or avaPOSR > 8)):
+        return r, c
+    else:
+        if (r == 7):
+            if(c == 0 ):
+                 print(" r 0 hey")
+                 if(grid[avaPOSY][avaPOSR]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSY, avaPOSR))
+                    return possible1StartMove, possible1EndMove
+                    
+            elif(c == 7):
+                 print(" r y hey")
+                 if(grid[avaPOSY][avaPOSL]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSY, avaPOSL))
+                    return priority1Start, priority1End
+                    
+            elif(c > 0 and c < 7):
+                print(" r 07 hey")
+                if((grid[avaPOSY][avaPOSL] == "_ ") and (grid[avaPOSY][avaPOSR] == "_ ")):
+                   possible1StartMove.append((r,c))
+                   possible1EndMove.append((avaPOSY,avaPOSL))
+                   possible1StartMove.append((r,c))
+                   possible1EndMove.append((avaPOSY,avaPOSR))
+                   return priority1Start, priority1End
+                    
+               
+                elif (grid[avaPOSY][avaPOSL] == "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSY,avaPOSL))
+                    return priority1Start, priority1End
+                    
+
+                elif(grid[avaPOSY][avaPOSR]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSY, avaPOSR))
+                    return priority1Start, priority1End
+                    
+            if((grid[avaPOSY][avaPOSL] != "_ ") or (grid[avaPOSY][avaPOSR] != "_ ") or (grid[avaPOSY][avaPOSL] == "W ") or (grid[avaPOSY][avaPOSR] == "W ")):
+              return
+            
+        elif (r > 0 and r < 8):
+            
+            if(c == 0 ):
+                if(grid[avaPOSX][avaPOSR]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSX, avaPOSR))
+                    return possible1StartMove, possible1EndMove
+                
+                elif(grid[avaPOSY][avaPOSR]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSY, avaPOSR))
+                    return priority1Start, priority1End
+                    
+                
+               
+                
+            elif(c == 7):
+                if(grid[avaPOSX][avaPOSL]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSX, avaPOSL))
+                    return possible1StartMove, possible1EndMove
+                
+                elif(grid[avaPOSY][avaPOSL]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSY, avaPOSL))
+                    return priority1Start, priority1End
+                    
+                
+                
+            elif(c > 0 and c < 7):
+                if((grid[avaPOSX][avaPOSL] == "_ ") and (grid[avaPOSX][avaPOSR] == "_ ")):
+                   possible1StartMove.append((r,c))
+                   possible1EndMove.append((avaPOSX,avaPOSL))
+                   possible1StartMove.append((r,c))
+                   possible1EndMove.append((avaPOSX,avaPOSR))
+                   return possible1StartMove, possible1EndMove
+                    
+                   
+                elif (grid[avaPOSX][avaPOSL] == "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSX,avaPOSL))
+                    return possible1StartMove, possible1EndMove
+
+                elif(grid[avaPOSX][avaPOSR]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSX, avaPOSR))
+                    return possible1StartMove, possible1EndMove
+                    
+
+                if((grid[avaPOSY][avaPOSL] == "_ ") and (grid[avaPOSY][avaPOSR] == "_ ")):
+                   possible1StartMove.append((r,c))
+                   possible1EndMove.append((avaPOSY,avaPOSL))
+                   possible1StartMove.append((r,c))
+                   possible1EndMove.append((avaPOSY,avaPOSR))
+                   return priority1Start, priority1End
+                    
+               
+                elif (grid[avaPOSY][avaPOSL] == "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSY,avaPOSL))
+                    return priority1Start, priority1End
+                    
+
+                elif(grid[avaPOSY][avaPOSR]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSY, avaPOSR))
+                    return priority1Start, priority1End
+            
+            if((grid[avaPOSX][avaPOSL] != "_ ") or (grid[avaPOSX][avaPOSR] != "_ ") or (grid[avaPOSX][avaPOSL] == "W ") or (grid[avaPOSX][avaPOSR] == "W ") or
+               (grid[avaPOSY][avaPOSL] != "_ ") or (grid[avaPOSY][avaPOSR] != "_ ") or (grid[avaPOSY][avaPOSL] == "W ") or (grid[avaPOSY][avaPOSR] == "W ")):
+              return
+
+        elif (r == 7):
+            
+            if(c == 0 ):
+                if(grid[avaPOSX][avaPOSR]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSX, avaPOSR))
+                    return possible1StartMove, possible1EndMove
+                
+                elif(grid[avaPOSY][avaPOSR]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSY, avaPOSR))
+                    return possible1StartMove, possible1EndMove
+                    
+                
+               
+                
+            elif(c == 7):
+                if(grid[avaPOSX][avaPOSL]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSX, avaPOSL))
+                    return possible1StartMove, possible1EndMove
+                
+                elif(grid[avaPOSY][avaPOSL]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSY, avaPOSL))
+                    return possible1StartMove, possible1EndMove
+                    
+                
+                
+            elif(c > 0 and c < 7):
+                if((grid[avaPOSX][avaPOSL] == "_ ") and (grid[avaPOSX][avaPOSR] == "_ ")):
+                   possible1StartMove.append((r,c))
+                   possible1EndMove.append((avaPOSX,avaPOSL))
+                   possible1StartMove.append((r,c))
+                   possible1EndMove.append((avaPOSX,avaPOSR))
+                   return possible1StartMove, possible1EndMove
+                    
+                   
+                elif (grid[avaPOSX][avaPOSL] == "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSX,avaPOSL))
+                    return possible1StartMove, possible1EndMove
+
+                elif(grid[avaPOSX][avaPOSR]== "_ "):
+                    possible1StartMove.append((r,c))
+                    possible1EndMove.append((avaPOSX, avaPOSR))
+                    return possible1StartMove, possible1EndMove     
+            
+    return grid
+def king1ValidJump(r,c,priority1Start, priority1End):
+
+    POSX = r + 2 #Looks for an open space either to the left or the right
+    POSL = c - 2
+    POSR = c + 2
+    POSY = r - 2
+
+    avaPOSX = r + 1
+    avaPOSL = c - 1
+    avaPOSR = c + 1
+    avaPOSY = r - 1
+    
+    if((POSX < 0 or POSX > 7) or (POSL <-1 or POSL > 7) or (POSR < 0 or POSR > 8)):
+            return
+    else:
+        if(((grid[POSX][POSR] == "_ ") and(grid[avaPOSX][avaPOSR] == "W ")) and ((grid[POSX][POSL] == "_ ") and (grid[avaPOSX][avaPOSL] == "W "))):
+             priority1Start.append((r,c))
+             priority1End.append((POSX, POSR))
+             priority1Start.append((r,c))
+             priority1End.append((POSX, POSL))
+             return priority1Start, priority1End
+            
+
+        elif(grid[POSX][POSR] == "_ "):
+             if(grid[avaPOSX][avaPOSR] == "W "):
+                 priority1Start.append((r,c))
+                 priority1End.append((POSX, POSR))
+                 return priority1Start, priority1End
+                        
+        elif(grid[POSX][POSL] == "_ "):
+             if(grid[avaPOSX][avaPOSL] == "W "):
+                 priority1Start.append((r,c))
+                 priority1End.append((POSX, POSL))
+                 return priority1Start, priority1End
+                
+        if(((grid[POSY][POSR] == "_ ") and(grid[avaPOSY][avaPOSR] == "W ")) and ((grid[POSY][POSL] == "_ ") and (grid[avaPOSY][avaPOSL] == "W "))):
+             priority1Start.append((r,c))
+             priority1End.append((POSY, POSR))
+             priority1Start.append((r,c))
+             priority1End.append((POSY, POSL))
+             return priority1Start, priority1End
+            
+
+        elif(grid[POSY][POSR] == "_ "):
+             if(grid[avaPOSX][avaPOSR] == "W "):
+                 priority1Start.append((r,c))
+                 priority1End.append((POSY, POSR))
+                 return priority1Start, priority1End
+                        
+        elif(grid[POSY][POSL] == "_ "):
+             if(grid[avaPOSX][avaPOSL] == "W "):
+                 priority1Start.append((r,c))
+                 priority1End.append((POSY, POSL))
+                 return priority1Start, priority1End
+
+def kingAI1Oppo(newRows, newCols, toRows ,toCols):
+    if ((newRows - toCols) == 2):  #Sqaure moves right 
+        if((newRows - toRows) == 2): #sqaure moved down
+           
+            a = newRows - 1 #a and b coorindinates for opponent
+            b = newCols - 1 
+            if(grid[a][b] == "W " or grid[a][b] == "w "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == "W "):
-                print("No Piece to Take")
+                
+        elif((newRows-toRows)== -2): #sqaure moved up
+            a = newPOSX + 1 #a and b coorindinates for opponent
+            b = newPOSY - 1
+           
+            if(grid[a][b] == "W " or grid[a][b] == "w "):
+                grid[a][b] = "_ "   
+        
+            
+    if (newCols-toCols == -2): #sqaure moved left
+         if((newRows - toRows) == 2): #sqaure moved down
+           
+            a = newRows - 1 #a and b coorindinates for opponent
+            b = newCols + 1
+            if(grid[a][b] == "W " or grid[a][b] == "w "):
+                grid[a][b] = "_ "
+                
+         elif((newRows-toRows)== -2): #sqaure moved up
+            a = newRows + 1 #a and b coorindinates for opponent
+            b = newCols + 1
+            
+            if(grid[a][b] == "W " or grid[a][b] == "w "):
+                grid[a][b] = "_ "
 
 def AIMoves(j):
-   
+    print("Player 2")
+    draw_grid(grid)
     for r in range(height):
         for c in range(width):
             if(grid[r][c] == "W "):
-                 print(r,c)
                  checkIfMove(r,c,possibleStartMove,possibleEndMove)
                  validJump(r,c,priorityStart, priorityEnd)
+            elif (grid[r][c] == "w "):
+                print(r,c,"Entered the w loop")
+                kingAIMoves(r,c)
+                kingValidJump(r,c,priorityStart, priorityEnd)
+                 
     if(priorityStart == []):
         print(possibleStartMove)
         print(possibleEndMove)
+        print(grid[r][c])
         selectPiece = random.choice(possibleStartMove)
         newPositionIndex = possibleStartMove.index(selectPiece)
         newPosition  = possibleEndMove[newPositionIndex]
@@ -683,20 +1108,16 @@ def AIMoves(j):
     newCols = newPosition[1]
     print(toRows, toCols)
     print(newRows, newCols)
-      if(grid[toRows][toCols] == "w "):
-    
-        kingAIMoves(toRows, toCols,j)
-        kingAIOppo(newPOSX, newPOSY, toRows ,toCols)
-        
+    if(grid[toRows][toCols] == "w "):
+        kingAIOppo(newRows, newCols, toRows ,toCols)
+        grid[newRows][newCols] = "w "
     else:
-    
-    
-    if(((newCols - toCols) == 2) or ((newCols - toCols) == -2)):
         checkAIOpponents(newCols,toCols,newRows)
+        grid[newRows][newCols] = "W "
 
-    king2 = checkAIStatus(newPOSX, newPOSY)
+    checkAIStatus(newRows, newCols)
     grid[toRows][toCols] = "_ "
-    grid[newRows][newCols] = "W "
+    
     possibleStartMove.clear()
     possibleEndMove.clear()
     priorityStart.clear()
@@ -707,19 +1128,18 @@ def checkIfMove(r,c,possibleStartMove,possibleEndMove):
     avaPOSL = c - 1
     avaPOSR = c + 1
     
-    if((avaPOSX < 0 or avaPOSX > 7) or (avaPOSL <-1 or avaPOSL > 7) or (avaPOSR < 0 or avaPOSR > 8)):
+    if((avaPOSX < -1 or avaPOSX > 7) or (avaPOSL <-1 or avaPOSL > 7) or (avaPOSR < 0 or avaPOSR > 8)):
         return r, c
-    else:    
+    else:
+        
         if(c == 0 ):
-            print(grid[avaPOSX][avaPOSR])
             if(grid[avaPOSX][avaPOSR]== "_ "):
-                print("Hey")
                 possibleStartMove.append((r,c))
                 possibleEndMove.append((avaPOSX, avaPOSR))
                 return possibleStartMove, possibleEndMove
+            
         elif(c == 7):
              if(grid[avaPOSX][avaPOSL]== "_ "):
-                print("Heyy")
                 possibleStartMove.append((r,c))
                 possibleEndMove.append((avaPOSX, avaPOSL))
                 return possibleStartMove, possibleEndMove
@@ -736,7 +1156,6 @@ def checkIfMove(r,c,possibleStartMove,possibleEndMove):
                 return possibleStartMove, possibleEndMove
 
             elif(grid[avaPOSX][avaPOSR]== "_ "):
-                print("Heyy")
                 possibleStartMove.append((r,c))
                 possibleEndMove.append((avaPOSX, avaPOSR))
                 return possibleStartMove, possibleEndMove
@@ -744,7 +1163,7 @@ def checkIfMove(r,c,possibleStartMove,possibleEndMove):
         if((grid[avaPOSX][avaPOSL] != "_ ") or (grid[avaPOSX][avaPOSR] != "_ ") or (grid[avaPOSX][avaPOSL] == "W ") or (grid[avaPOSX][avaPOSR] == "W ")):
             print(r,c, " Returned. No Value")
 
-def validJump(r,c,riorityStart, priorityEnd):
+def validJump(r,c,priorityStart, priorityEnd):
 
     POSX = r - 2 #Looks for an open space either to the left or the right
     POSL = c - 2
@@ -754,10 +1173,11 @@ def validJump(r,c,riorityStart, priorityEnd):
     avaPOSL = c - 1
     avaPOSR = c + 1
     
+    
     if((POSX < 0 or POSX > 7) or (POSL <-1 or POSL > 7) or (POSR < 0 or POSR > 7)):
             return
     else:
-        if(((grid[POSX][POSR] == "_ ") and (grid[POSX][POSL] == "_ ")) and ((grid[avaPOSX][avaPOSR] == "B ") and (grid[avaPOSX][avaPOSL] == "B "))):
+        if(((grid[POSX][POSR] == "_ ") and (grid[avaPOSX][avaPOSR] == "B ")) and ((grid[POSX][POSL] == "_ ") and (grid[avaPOSX][avaPOSL] == "B "))):
              priorityStart.append((r,c))
              priorityEnd.append((POSX, POSR))
              priorityStart.append((r,c))
@@ -787,8 +1207,6 @@ def checkAIOpponents(newCols,toCols,newRows):
         if(grid[a][b] == "B " or grid[a][b] == "b "):
             grid[a][b] = "_ "
             return
-        elif(grid[a][b] == "_ " or grid[a][b] == +" "):
-            print("No Piece to Take")
             
     if (newCols-toCols == -2): #sqaure moved left
         a = newRows + 1
@@ -796,22 +1214,17 @@ def checkAIOpponents(newCols,toCols,newRows):
         if(grid[a][b] == "B " or grid[a][b] == "b "):
             grid[a][b] = "_ "
             return
-        elif(grid[a][b] == "_ " or grid[a][b] == +"W "):
-            print("No Piece to Take")
-
     return
 
-def checkAIStatus(newPOSX, newPOSY):
+def checkAIStatus(newRows, newCols):
 
-    if(newPOSX == 0):
-        grid[newPOSX][newPOSY] = "w "
-        king2 = "w "
-        return king2
+    if(newRows == 0):
+        grid[newRows][newCols] = "w "
     else:
         print("No king")
         return False
 
-def kingAIMoves(toRows, toCols, j, pastMove2):
+def kingAIMoves(r,c):
     print("I am king")
 
     avaPOSX = r - 1
@@ -819,86 +1232,233 @@ def kingAIMoves(toRows, toCols, j, pastMove2):
     avaPOSR = c + 1
     avaPOSY = r + 1
     
-    if((avaPOSX < 0 or avaPOSX > 7) or (avaPOSL <-1 or avaPOSL > 7) or (avaPOSR < 0 or avaPOSR > 8)):
+    if((avaPOSX < -1 or avaPOSX > 7) or (avaPOSL <-1 or avaPOSL > 7) or (avaPOSR < 0 or avaPOSR > 7)):
         return r, c
-    else:    
-        if(c == 0 ):
-            print(grid[avaPOSX][avaPOSR])
-            if(grid[avaPOSX][avaPOSR]== "_ "):
-                print("Hey")
-                possibleStartMove.append((r,c))
-                possibleEndMove.append((avaPOSX, avaPOSR))
-                return possibleStartMove, possibleEndMove
-        elif(c == 7):
-             if(grid[avaPOSX][avaPOSL]== "_ "):
-                print("Heyy")
-                possibleStartMove.append((r,c))
-                possibleEndMove.append((avaPOSX, avaPOSL))
-                return possibleStartMove, possibleEndMove
-        elif(c > 0 and c < 7):
-            if((grid[avaPOSX][avaPOSL] == "_ ") and (grid[avaPOSX][avaPOSR] == "_ ")):
-               possibleStartMove.append((r,c))
-               possibleEndMove.append((avaPOSX,avaPOSL))
-               possibleStartMove.append((r,c))
-               possibleEndMove.append((avaPOSX,avaPOSR))
+    else:
+       if(r == 0):
+            if(c == 0 ):
+                 print(" r 0 hey")
+                 if(grid[avaPOSY][avaPOSR]== "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSY, avaPOSR))
+                    return priorityStart, priorityEnd
+            
+            elif(c == 7):
+                 print(" r y hey")
+                 if(grid[avaPOSY][avaPOSL]== "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSY, avaPOSL))
+                    return priorityStart, priorityEnd
+                
+            elif(c > 0 and c < 7):
+                print(" r 07 hey")
+                if((grid[avaPOSY][avaPOSL] == "_ ") and (grid[avaPOSY][avaPOSR] == "_ ")):
+                   possibleStartMove.append((r,c))
+                   possibleEndMove.append((avaPOSY,avaPOSL))
+                   possibleStartMove.append((r,c))
+                   possibleEndMove.append((avaPOSY,avaPOSR))
+                   return priorityStart, priorityEnd
                
-            elif (grid[avaPOSX][avaPOSL] == "_ "):
-                possibleStartMove.append((r,c))
-                possibleEndMove.append((avaPOSX,avaPOSL))
-                return possibleStartMove, possibleEndMove
+                elif (grid[avaPOSY][avaPOSL] == "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSY,avaPOSL))
+                    return priorityStart, priorityEnd
 
-            elif(grid[avaPOSX][avaPOSR]== "_ "):
-                print("Heyy")
-                possibleStartMove.append((r,c))
-                possibleEndMove.append((avaPOSX, avaPOSR))
-                return possibleStartMove, possibleEndMove
-                    
-        if((grid[avaPOSX][avaPOSL] != "_ ") or (grid[avaPOSX][avaPOSR] != "_ ") or (grid[avaPOSX][avaPOSL] == "W ") or (grid[avaPOSX][avaPOSR] == "W ")):
-            print(r,c, " Returned. No Value")
+                elif(grid[avaPOSY][avaPOSR]== "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSY, avaPOSR))
+                    return priorityStart, priorityEnd
+                
+                if((grid[avaPOSY][avaPOSL] != "_ ") or (grid[avaPOSY][avaPOSR] != "_ ") or (grid[avaPOSY][avaPOSL] == "W ") or (grid[avaPOSY][avaPOSR] == "W ")):
+                  return
+            
+       elif (r > 0 and r < 8):
+            if(c == 0 ):
+                if(grid[avaPOSX][avaPOSR]== "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSX, avaPOSR))
+                    return possibleStartMove, possibleEndMove
+                
+                elif(grid[avaPOSY][avaPOSR]== "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSY, avaPOSR))
+                    return priorityStart, priorityEnd
+                
+               
+                
+            elif(c == 7):
+                if(grid[avaPOSX][avaPOSL]== "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSX, avaPOSL))
+                    return possibleStartMove, possibleEndMove
+                
+                elif(grid[avaPOSY][avaPOSL]== "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSY, avaPOSL))
+                    return priorityStart, priorityEnd
+                
+                
+            elif(c > 0 and c < 7):
+                if((grid[avaPOSX][avaPOSL] == "_ ") and (grid[avaPOSX][avaPOSR] == "_ ")):
+                   possibleStartMove.append((r,c))
+                   possibleEndMove.append((avaPOSX,avaPOSL))
+                   possibleStartMove.append((r,c))
+                   possibleEndMove.append((avaPOSX,avaPOSR))
+                   return possibleStartMove, possibleEndMove
+                   
+                elif (grid[avaPOSX][avaPOSL] == "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSX,avaPOSL))
+                    return possibleStartMove, possibleEndMove
+
+                elif(grid[avaPOSX][avaPOSR]== "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSX, avaPOSR))
+                    return possibleStartMove, possibleEndMove
+
+                if((grid[avaPOSY][avaPOSL] == "_ ") and (grid[avaPOSY][avaPOSR] == "_ ")):
+                   possibleStartMove.append((r,c))
+                   possibleEndMove.append((avaPOSY,avaPOSL))
+                   possibleStartMove.append((r,c))
+                   possibleEndMove.append((avaPOSY,avaPOSR))
+                   return priorityStart, priorityEnd
+               
+                elif (grid[avaPOSY][avaPOSL] == "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSY,avaPOSL))
+                    return priorityStart, priorityEnd
+                
+                elif(grid[avaPOSY][avaPOSR]== "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSY, avaPOSR))
+                    return priorityStart, priorityEnd
+            
+            if((grid[avaPOSX][avaPOSL] != "_ ") or (grid[avaPOSX][avaPOSR] != "_ ") or (grid[avaPOSX][avaPOSL] == "W ") or (grid[avaPOSX][avaPOSR] == "W ") or
+               (grid[avaPOSY][avaPOSL] != "_ ") or (grid[avaPOSY][avaPOSR] != "_ ") or (grid[avaPOSY][avaPOSL] == "W ") or (grid[avaPOSY][avaPOSR] == "W ")):
+              return
+
+            if(r == 7):
+                if(c == 0 ):
+                 print(" r 0 hey")
+                 if(grid[avaPOSX][avaPOSR]== "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSX, avaPOSR))
+                    return possibleStartMove, possibleEndMove
+            
+            elif(c == 7):
+                 print(" r y hey")
+                 if(grid[avaPOSY][avaPOSL]== "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSX, avaPOSL))
+                    return possibleStartMove, possibleEndMove
+                
+            elif(c > 0 and c < 7):
+                print(" r 07 hey")
+                if((grid[avaPOSX][avaPOSL] == "_ ") and (grid[avaPOSX][avaPOSR] == "_ ")):
+                   possibleStartMove.append((r,c))
+                   possibleEndMove.append((avaPOSX,avaPOSL))
+                   possibleStartMove.append((r,c))
+                   possibleEndMove.append((avaPOSX,avaPOSR))
+                   return possibleStartMove, possibleEndMove
+               
+                elif (grid[avaPOSX][avaPOSL] == "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSX,avaPOSL))
+                    return possibleStartMove, possibleEndMove
+
+                elif(grid[avaPOSX][avaPOSR]== "_ "):
+                    possibleStartMove.append((r,c))
+                    possibleEndMove.append((avaPOSX, avaPOSR))
+                    return possibleStartMove, possibleEndMove    
         
     
     return grid
+def kingValidJump(r,c,riorityStart, priorityEnd):
 
-def kingAIOppo(newPOSX, newPOSY, toRows ,toCols):
-    if ((newPOSY - toCols) == 2):  #Sqaure moves right 
-        if((newPOSX - toRows) == 2): #sqaure moved down
-           
-            a = newPOSX - 1 #a and b coorindinates for opponent
-            b = newPOSY - 1 
-            if(grid[a][b] == "B " or grid[a][b] == "b "):
-                grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == "W "):
-                print("No Piece to Take")
+    POSX = r - 2 #Looks for an open space either to the left or the right
+    POSL = c - 2
+    POSR = c + 2
+    POSY = r + 2
+
+    avaPOSX = r - 1
+    avaPOSL = c - 1
+    avaPOSR = c + 1
+    avaPOSY = r + 1
+    
+    if((POSX < 0 or POSX > 7) or (POSL <-1 or POSL > 7) or (POSR < 0 or POSR > 7)):
+            return
+    else:
+        if(((grid[POSX][POSR] == "_ ") and (grid[POSX][POSL] == "_ ")) and ((grid[avaPOSX][avaPOSR] == "B ") and (grid[avaPOSX][avaPOSL] == "B "))):
+             priorityStart.append((r,c))
+             priorityEnd.append((POSX, POSR))
+             priorityStart.append((r,c))
+             priorityEnd.append((POSX, POSL))
+             return priorityStart, priorityEnd
+            
+
+        elif(grid[POSX][POSR] == "_ "):
+             if(grid[avaPOSX][avaPOSR] == "B "):
+                 priorityStart.append((r,c))
+                 priorityEnd.append((POSX, POSR))
+                 return priorityStart, priorityEnd
+                        
+        elif(grid[POSX][POSL] == "_ "):
+             if(grid[avaPOSX][avaPOSL] == "B "):
+                 priorityStart.append((r,c))
+                 priorityEnd.append((POSX, POSL))
+                 return priorityStart, priorityEnd
                 
-        elif((newPOSX-toRows)== -2): #sqaure moved up
-            a = newPOSX + 1 #a and b coorindinates for opponent
-            b = newPOSY - 1
+        elif(((grid[POSY][POSR] == "_ ") and (grid[POSY][POSL] == "_ ")) and ((grid[avaPOSY][avaPOSR] == "B ") and (grid[avaPOSX][avaPOSL] == "B "))):
+             priorityStart.append((r,c))
+             priorityEnd.append((POSY, POSR))
+             priorityStart.append((r,c))
+             priorityEnd.append((POSY, POSL))
+             return priorityStart, priorityEnd
+            
+
+        elif(grid[POSX][POSR] == "_ "):
+             if(grid[avaPOSX][avaPOSR] == "B "):
+                 priorityStart.append((r,c))
+                 priorityEnd.append((POSY, POSR))
+                 return priorityStart, priorityEnd
+                        
+        elif(grid[POSX][POSL] == "_ "):
+             if(grid[avaPOSX][avaPOSL] == "B "):
+                 priorityStart.append((r,c))
+                 priorityEnd.append((POSY, POSL))
+                 return priorityStart, priorityEnd
+
+def kingAIOppo(newRows, newCols, toRows ,toCols):
+    if ((newCols - toCols) == 2):  #Sqaure moves right 
+        if((newRows - toRows) == 2): #sqaure moved down
            
+            a = newRows - 1 #a and b coorindinates for opponent
+            b = newCols - 1 
             if(grid[a][b] == "B " or grid[a][b] == "b "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == "W "):
-                print("No Piece to Take")
-        
+                
+        elif((newRows-toRows)== -2): #sqaure moved up
+            a = newRows + 1 #a and b coorindinates for opponent
+            b = newCols - 1
+           
+            if(grid[a][b] == "B " or grid[a][b] == "b "):
+                grid[a][b] = "_ "    
         
             
-    if (newPOSY-toCols == -2): #sqaure moved left
+    if (newCols-toCols == -2): #sqaure moved left
          if((newPOSX - toRows) == 2): #sqaure moved down
            
-            a = newPOSX - 1 #a and b coorindinates for opponent
-            b = newPOSY + 1
+            a = newRows - 1 #a and b coorindinates for opponent
+            b = newCols + 1
             if(grid[a][b] == "B " or grid[a][b] == "b "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == "W "):
-                print("No Piece to Take")
                 
-         elif((newPOSX-toRows)== -2): #sqaure moved up
-            a = newPOSX + 1 #a and b coorindinates for opponent
-            b = newPOSY + 1
+         elif((newRows-toRows)== -2): #sqaure moved up
+            a = newCols + 1 #a and b coorindinates for opponent
+            b = newRows + 1
             
             if(grid[a][b] == "B " or grid[a][b] == "b "):
                 grid[a][b] = "_ "
-            elif(grid[a][b] == "_ " or grid[a][b] == "W "):
-                print("No Piece to Take")
 
 
     
@@ -912,8 +1472,8 @@ def undo_feature(i,pastMove1,currentMove1,redoFeaturePOS1,redoFeaturePOS2):
   
     newPOSX  = int (pastMove1[i][0:1]) #temp coordinates
     newPOSY  = int (pastMove1[i][2:3])
-    redoFeaturePOS1.append(currentMove1)
-    redoFeaturePOS2.append(pastMove1)
+    redoFeaturePOS1.append(currentMove1[i])
+    redoFeaturePOS2.append(pastMove1[i])
     print(pastMove1)
     currentMove1.pop()
     pastMove1.pop()
@@ -925,9 +1485,9 @@ def undo_feature(i,pastMove1,currentMove1,redoFeaturePOS1,redoFeaturePOS2):
            
             print(i)
             print("Move Deleted")
-            return firstMove(i)
+            return firstMove(i), secondMoves(j)  
 
-def undo_feature_2(j,pastMove2,currentMove2,redoFeaturePOS1,redoFeaturePOS2):
+def undo_feature_2(j,pastMove2,currentMove2,redoFeature2POS1,redoFeature2POS2):
     j-=1
     print("Undo Selected")
     print(j)
@@ -937,9 +1497,9 @@ def undo_feature_2(j,pastMove2,currentMove2,redoFeaturePOS1,redoFeaturePOS2):
   
     newPOSX  = int (pastMove2[j][0:1]) #temp coordinates
     newPOSY  = int (pastMove2[j][2:3])
+    redoFeature2POS1.append(currentMove2[j])
+    redoFeature2POS2.append(pastMove2[j])
     print(pastMove2)
-    print(redofeature)
-    
     currentMove2.pop()
     pastMove2.pop()
 
@@ -947,58 +1507,92 @@ def undo_feature_2(j,pastMove2,currentMove2,redoFeaturePOS1,redoFeaturePOS2):
            
             grid[newPOSX][newPOSY] = "_ "  #changes the avilabe space to B and the last space to _
             grid[toRows][toCols] = "W "
-           
+            
             print(j)
             print("Move Deleted")
-            return secondMoves(j), redofeature
+            return secondMoves(j), firstMove(i)
 
-def redo_feature(i, pastMove1, currentMove1):
+def redoFeature(i, pastMove1, currentMove1):
     print("Redo  Selected")
-    i+=1
+    
     print(i)
-
     currentMove1.append(redoFeaturePOS1[i])
     pastMove1.append(redoFeaturePOS2[i])
-    toRows  = int (redofeaturePOS1[i][0:1]) #Converts the sliced string to an int
-    toCols  = int (redofeaturePOS1[i][2:3])
+    currentMove1.pop()
+    pastMove1.pop()
+    toRows  = int (redoFeaturePOS1[i][0:1]) #Converts the sliced string to an int
+    toCols  = int (redoFeaturePOS1[i][2:3])
   
-    newPOSX  = int (redofeaturePOS2[i][0:1]) #temp coordinates
-    newPOSY  = int (redofeaturePOS2[i][2:3])
+    newPOSX  = int (redoFeaturePOS2[i][0:1]) #temp coordinates
+    newPOSY  = int (redoFeaturePOS2[i][2:3])
   
-    if (grid[toRows][toCols] == "_ "):
+    if (grid[toRows][toCols] == "B "):
            
             grid[newPOSX][newPOSY] = "B "  #changes the avilabe space to B and the last space to _
             grid[toRows][toCols] = "_ "
            
+            print(i)
+            print("Move Changed")
+            return secondMoves(j), firstMove(i), redoFeaturePOS1, redoFeaturePOS2
+
+def redo_feature2(j, pastMove2, currentMove2):
+    print("Redo  Selected")
+    print(j)
+
+    currentMove2.append(redoFeature2POS1[j])
+    pastMove2.append(redoFeature2POS2[j])
+    currentMove2.pop()
+    pastMove2.pop()
+    toRows  = int (redoFeature2POS1[j][0:1]) #Converts the sliced string to an int
+    toCols  = int (redoFeature2POS1[j][2:3])
+  
+    newPOSX  = int (redoFeature2POS2[j][0:1]) #temp coordinates
+    newPOSY  = int (redoFeature2POS2[j][2:3])
+  
+    if (grid[toRows][toCols] == "W "):
+           
+            grid[newPOSX][newPOSY] = "W "  #changes the avilabe space to B and the last space to _
+            grid[toRows][toCols] = "_ "
+           
             print(j)
             print("Move Changed")
-            return secondMoves(j), redoFeaturePOS1, redoFeaturePOS2
-
-    
-    
+            return firstMove(i),secondMoves(j), redoFeature2POS1, redoFeature2POS2
 
 
-
-#Issues found while playing:
-    #Move other persons piece!
-    #When error message occurs, no change to piece
-    #Empty variables
-    #Appending into liat when value has not been checked
+def replayFeature():
+    for k in range(i):
+        draw_grid(grid)
+        print("\nPlayer1")
+        currentMove1[k]
+        pastMove1[k]
+        draw_grid(grid)
+        print("\nPlayer2")
+        currentMove2[k]
+        pastMove2[k]
+        
     
           
 ##Global Variables
 width = 8
 height = 8
+
 pastMove1=[]
 pastMove2=[]
 currentMove1=[]
 currentMove2=[]
-possibleStartMove =[]
-possibleEndMove =[]
 redoFeaturePOS1 = []
 redoFeaturePOS2 = []
+redoFeature2POS1 =[]
+redoFeature2POS2 =[]
+
+possibleStartMove =[]
+possibleEndMove =[]
 priorityStart = []
 priorityEnd = []
+possible1StartMove =[]
+possible1EndMove =[]
+priority1Start = []
+priority1End = []
 
 
 i = 0
@@ -1007,25 +1601,56 @@ j = 0
                        
 #Main Program
 instruction()
-opponent = input("Select your opponent \n1. Computer\n2. Human")
-if(opponent == '1'):
-    print("You have selected Computer")
-    grid = init_board()
-    while(stilPieces(bool) == False):
-        firstMove(i)
-        i+=1
-        AIMoves(j)
-        j+=1
+opponent = input("Select your opponent \n1. Human vs Human\n2. Human vs Computer \n3. Computer Vs Computer")
+while((opponent != '1') or (opponent != '2') or (opponent != '3')):
+    if(opponent == '1'):
+        print("You have selected Human vs Human")
+        grid = init_board()
+        while(stilPieces(bool) == False):
+            print("I is: ",i)
+            firstMove(i)
+            i+=1
+            print("J is: ",j)
+            secondMoves(j)
+            j+=1
+        replay = input("Would you like to Replay the game? Y/N")
+        if(replay == "Y"):
+            replayFeature()
+        elif(replay == "N"):
+            print("Game Ended")
         
-    print("Game Ended")
+    elif(opponent == '2'):
+       
+
+        print("You have selected Humann vs Computer")
+        grid = init_board()
+        while(stilPieces(bool) == False):
+            firstMove(i)
+            i+=1
+            AIMoves(j)
+            j+=1
+        replay = input("Would you like to Replay the game? Y/N")
+        if(replay == "Y"):
+            replayFeature()
+        elif(replay == "N"):
+            print("Game Ended")
+            
     
-elif(opponent == '2'):
-    print("You have selected human")
-    grid = init_board()
-    while(stilPieces(bool) == False):
-        firstMove(i)
-        i+=1
-        secondMoves(j)
-        j+=1
-        
-    print("Game Ended")
+
+    elif(opponent == '3'):
+        print("You have selected Computer vs Computer")
+        grid = init_board()
+        while(stilPieces(bool) == False):
+            AI1Moves(i)
+            i+=1
+            AIMoves(j)
+            j+=1
+            
+        replay = input("Would you like to Replay the game? Y/N")
+        if(replay == "Y"):
+            replayFeature()
+        elif(replay == "N"):
+            print("Game Ended")
+            
+    if((opponent != '1') or (opponent != '2') (opponent != '3')):
+        opponent = input("Select your opponent \n1. Human vs Computer\n2. Humnan vs Human \n3. Computer Vs Computer")

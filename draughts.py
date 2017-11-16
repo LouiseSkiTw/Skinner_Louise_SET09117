@@ -678,7 +678,7 @@ def AI1Moves(i): #AI Player 1
 
     currentMove1.append(selectPiece)
     pastMove1.append(newPosition)
-    print("\nCurrent Posirtion: ", currentMove1," New Position: ",pastMove1)
+    print("\nCurrent Posirtion: ", selectPiece," New Position: ",newPosition)
         
     toRows  = selectPiece[0]#Converts the sliced string to an int
     toCols  = selectPiece[1]
@@ -752,7 +752,7 @@ def valid1Jump(r,c,priority1Start, priority1End): #checks if the oppoents are ne
     avaPOSR = c + 1
     
                 
-    if((POSX < -1 or POSX > 7) or (POSL <-1 or POSL > 7) or (POSR < 0 or POSR > 7)):
+    if((POSX < -1 or POSX > 7) or (POSL <0 or POSL > 7) or (POSR < 0 or POSR > 7)):
             return
     else:
         if((((grid[POSX][POSR] == "_ ") and (grid[avaPOSX][avaPOSR] == "W ")) or ((grid[POSX][POSR] == "_ ")and(grid[avaPOSX][avaPOSR] == "w "))) #If both ways have oppoent. 
@@ -932,7 +932,7 @@ def king1ValidJump(r,c,priority1Start, priority1End):
     avaPOSR = c + 1
     avaPOSY = r - 1
     
-    if((POSX < 0 or POSX > 7) or (POSL <-1 or POSL > 7) or (POSR < 0 or POSR > 7)):
+    if((POSX < 0 or POSX > 7) or (POSL <0 or POSL > 7) or (POSR < 0 or POSR > 7)):
             return
     else:
         if((((grid[POSX][POSR] == "_ ") and (grid[avaPOSX][avaPOSR] == "W ")) or ((grid[POSX][POSR] == "_ ")and(grid[avaPOSX][avaPOSR] == "w ")))
@@ -1041,7 +1041,7 @@ def AIMoves(j):
         newPosition  = priorityEnd[newPositionIndex]
     currentMove2.append(selectPiece)
     pastMove2.append(newPosition)
-    print("\nCurrent Posirtion: ", currentMove1," New Position: ",pastMove1)
+    print("\nCurrent Posirtion: ", selectPiece," New Position: ",newPosition)
     
     toRows  = selectPiece[0]#Converts the sliced string to an int
     toCols  = selectPiece[1]
@@ -1114,7 +1114,7 @@ def validJump(r,c,priorityStart, priorityEnd):
     avaPOSR = c + 1
     
     
-    if((POSX < 0 or POSX > 7) or (POSL <-1 or POSL > 7) or (POSR < 0 or POSR > 7)):
+    if((POSX < 0 or POSX > 7) or (POSL <0 or POSL > 7) or (POSR < 0 or POSR > 7)):
             return
     else:
         if((((grid[POSX][POSR] == "_ ") and (grid[avaPOSX][avaPOSR] == "B ")) or ((grid[POSX][POSR] == "_ ")and(grid[avaPOSX][avaPOSR] == "b ")))
@@ -1365,46 +1365,54 @@ def kingAIOppo(newRows, newCols, toRows ,toCols):
     
 def undo_feature(i,pastMove1,currentMove1,redoFeaturePOS1,redoFeaturePOS2): #undo feature for player1
     i-=1
-    print("Undo Selected")
     toRows  = int (currentMove1[i][0:1]) #Converts the sliced string to an int
     toCols  = int (currentMove1[i][2:3])
   
     newPOSX  = int (pastMove1[i][0:1]) #temp coordinates
     newPOSY  = int (pastMove1[i][2:3])
-    redoFeaturePOS1.append(currentMove1[i]) #saves them to a temp file
-    redoFeaturePOS2.append(pastMove1[i])
-    currentMove1.pop() #removes the last item in the stack
-    pastMove1.pop()
+    if(newPOSY - toCols == 2 or newPOSY - toCols == - 2):
+        print("Cannot undo an opponent")
+        return secondMoves(j)
+    else:
+        print("Undo Selected")
+        redoFeaturePOS1.append(currentMove1[i]) #saves them to a temp file
+        redoFeaturePOS2.append(pastMove1[i])
+        currentMove1.pop() #removes the last item in the stack
+        pastMove1.pop()
 
-    if (grid[toRows][toCols] == "_ "):
-           
-            grid[newPOSX][newPOSY] = "_ "  #changes the avilabe space to B and the last space to _
-            grid[toRows][toCols] = "B "
-           
-            print(i)
-            print("Move Deleted")
-            return firstMove(i), secondMoves(j)  
+        if (grid[toRows][toCols] == "_ "):
+               
+                grid[newPOSX][newPOSY] = "_ "  #changes the avilabe space to B and the last space to _
+                grid[toRows][toCols] = "B "
+               
+                print(i)
+                print("Move Deleted")
+                return firstMove(i), secondMoves(j)  
 
 def undo_feature_2(j,pastMove2,currentMove2,redoFeature2POS1,redoFeature2POS2): #undo feature for Player 2
     j-=1
-    print("Undo Selected")
     toRows  = int (currentMove2[j][0:1]) #Converts the sliced string to an int
     toCols  = int (currentMove2[j][2:3])
   
     newPOSX  = int (pastMove2[j][0:1]) #temp coordinates
     newPOSY  = int (pastMove2[j][2:3])
-    redoFeature2POS1.append(currentMove2[j])
-    redoFeature2POS2.append(pastMove2[j])
-    print(pastMove2)
-    currentMove2.pop()
-    pastMove2.pop()
+    if(newPOSY - toCols == 2 or newPOSY - toCols == - 2):
+        print("Cannot undo an opponent")
+        return firstMove(i)
+    else:
+        print("Undo Selected")
+        redoFeature2POS1.append(currentMove2[j])
+        redoFeature2POS2.append(pastMove2[j])
+        print(pastMove2)
+        currentMove2.pop()
+        pastMove2.pop()
 
-    if (grid[toRows][toCols] == "_ "):
-           
-            grid[newPOSX][newPOSY] = "_ "  #changes the avilabe space to B and the last space to _
-            grid[toRows][toCols] = "W "
-            print("Move Deleted")
-            return secondMoves(j), firstMove(i)
+        if (grid[toRows][toCols] == "_ "):
+               
+                grid[newPOSX][newPOSY] = "_ "  #changes the avilabe space to B and the last space to _
+                grid[toRows][toCols] = "W "
+                print("Move Deleted")
+                return secondMoves(j), firstMove(i)
 
 def redoFeature(i, pastMove1, currentMove1): #redo feature for Player 1
     print("Redo  Selected")
